@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# this script should be run as root
+if [ $EUID -ne 0 ]; then
+    sudo $0 $@
+    exit $?
+fi
+
+set -e
+
+add-apt-repository ppa:nginx/stable
+apt-get update
+apt-get install nginx

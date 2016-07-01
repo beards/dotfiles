@@ -1,0 +1,6 @@
+[submodule "autoenv/.autoenv"]
+	path = autoenv/.autoenv
+	url = git@github.com:kennethreitz/autoenv.git
+[submodule "vim/.vim"]
+	path = vim/.vim
+	url = git@github.com:beards/vimrc.git

@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# this script should be run as root
+if [ $EUID -ne 0 ]; then
+    sudo $0 $@
+    exit $?
+fi
+
+set -e
+
+SCRIPT_NAME=${BASH_SOURCE[0]}
+
+echo -e "#"
+echo -e "# $SCRIPT_NAME: install depending packages of plugins"
+echo -e "#"
+apt-get install -y python-dev python-pip exuberant-ctags
+pip install flake8
+
+vim +BundleInstall +qall
+
+apt-get install -y cmake
+cd ~/.vim/bundle/YouCompleteMe/
+./install.py --clang-completer
+
+echo -e "#"
+echo -e "# $SCRIPT_NAME: done !"
+echo -e "#"

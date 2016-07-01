@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -e
+
+SCRIPT_NAME=${BASH_SOURCE[0]}
+
+echo -e "#"
+echo -e "# $SCRIPT_NAME: install depending packages of plugins"
+echo -e "#"
+brew update
+brew install python cmake ack
+pip install flake8
+
+vim +BundleInstall +qall
+
+cd ~/.vim/bundle/YouCompleteMe/
+./install.py --clang-completer
+
+echo -e "#"
+echo -e "# $SCRIPT_NAME: done !"
+echo -e "#"

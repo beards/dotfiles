@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -e
+
+curl https://raw.githubusercontent.com/Homebrew/install/master/install -o brew_install
+ruby brew_install
+rm -f brew_install
+brew update
+brew install python
