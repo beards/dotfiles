@@ -87,6 +87,7 @@ export LC_ALL=en_US.UTF-8
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+alias la='ls -a'
 alias vi='vim'
 alias cdc='cd $HOME/_code/'
 alias cdgit='cd $HOME/github'
