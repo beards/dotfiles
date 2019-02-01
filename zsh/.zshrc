@@ -96,6 +96,8 @@ alias tm='tmux new -ADs'
 alias tml='tmux list-sessions'
 alias 0='tmux new -ADs 0'
 
+alias go='git checkout'
+
 alias gs='git status'
 alias gl='git log --pretty=format:"%Cgreen%h %Cblue%cn %Cred(%cd)%Creset:%n    %Cgreen%s%Creset" --name-status'
 alias gl1='git log --pretty=format:"%Cgreen%h %Cblue%cn %Cred(%cd)%Creset: %s"'

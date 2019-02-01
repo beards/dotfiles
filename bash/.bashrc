@@ -103,6 +103,8 @@ alias gl1='git log --pretty=format:"%Cgreen%h %Cblue%cn %Cred(%cd)%Creset: %s"'
 alias glg='git log --graph --abbrev-commit --decorate --date=relative --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)" --all'
 alias g='git'
 alias p='pyenv'
+alias go='git checkout'
+__git_complete go _git_checkout
 
 if [ "$OS" == "debian" ]; then
     alias ack='ack-grep'
