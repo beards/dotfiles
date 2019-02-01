@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 if [ -z $1 ]; then
     BREAK=1
 else

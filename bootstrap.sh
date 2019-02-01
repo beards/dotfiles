@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -e
 
@@ -6,7 +6,7 @@ pushd . &> /dev/null
 
 SCRIPT_NAME=${BASH_SOURCE[0]}
 DOTFILES_DIR="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-SCRIPT_DIR=$DOTFILES_DIR/scripts/
+SCRIPT_DIR=$DOTFILES_DIR/scripts
 
 echo -e "#"
 echo -e "# $SCRIPT_NAME: install necessary packages"
