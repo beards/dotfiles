@@ -1,3 +1,7 @@
+# use UTF8
+set -g utf8
+setw -g utf8 on
+
 # make tmux display things in 256 colors
 set -g default-terminal "screen-256color"
 
@@ -47,38 +51,53 @@ bind H resize-pane -L 5
 bind L resize-pane -R 5
 
 # pane border
-set -g pane-border-style fg=colour95
-set -g pane-active-border-style fg=white
+set -g pane-border-fg colour95
+set -g pane-active-border-fg white
 
 # status bar
 set -g status on
+set -g status-utf8 on
 set -g status-interval 5  # set update frequencey (default 15 seconds)
-set -g status-style bg=colour234,fg=colour7,dim
+set -g status-bg colour234
+set -g status-fg colour7
+set -g status-attr dim
 set -g status-left ' #[fg=colour71]#(whoami)@#H:#[fg=colour99][#S]    '
 set -g status-left-length 70
 set -g status-right '  #[fg=colour71] #(date +"%b %_d \(%a\) %H:%M") '
 set -g status-right-length 50
 setw -g automatic-rename on
-set -g window-status-current-style fg=colour190
+set -g window-status-current-fg colour190
 setw -g window-status-current-format '#I:[#W]#F'
 setw -g window-status-format '#I:[#W]#F'
 
 # dont beep
 set -g bell-action none
+set -g bell-on-alert off
 set -g visual-bell off
 
 setw -g monitor-activity on
-setw -g window-status-activity-style bg=colour89,fg=colour7
+setw -g window-status-activity-attr none
+setw -g window-status-activity-bg colour89
+setw -g window-status-activity-fg colour7
 
 # disable mouse control by default - change 'off' to 'on' to enable by default.
-setw -g mouse off
+setw -g mode-mouse off
+set -g mouse-resize-pane off
+set -g mouse-select-pane off
+set -g mouse-select-window off
 # toggle mouse mode to allow mouse copy/paste
 # set mouse on with prefix m
 bind m \
-    set -g mouse on \;\
+    set -g mode-mouse on \;\
+    set -g mouse-resize-pane on \;\
+    set -g mouse-select-pane on \;\
+    set -g mouse-select-window on \;\
     display 'Mouse: ON'
 # set mouse off with prefix M
 bind M \
-    set -g mouse off \;\
+    set -g mode-mouse off \;\
+    set -g mouse-resize-pane off \;\
+    set -g mouse-select-pane off \;\
+    set -g mouse-select-window off \;\
     display 'Mouse: OFF'
 
