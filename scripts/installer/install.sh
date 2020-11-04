@@ -26,7 +26,8 @@ fi
 
 # find corresponded script and run
 #
-source $SCRIPT_DIR/get_platform.sh
+source $SCRIPT_DIR/util_funcs.sh
+OS=$(get_platform)
 APP=$1 ; shift
 INSTALL_SCRIPT=$SCRIPT_DIR/installer/$OS/$APP
 

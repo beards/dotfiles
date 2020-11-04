@@ -61,9 +61,6 @@ export LC_ALL=en_US.UTF-8
 # path
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
 
-# my script tools
-source $HOME/scripts/get_platform.sh
-
 # autoenv
 . $HOME/scripts/autoenv/activate.sh
 
@@ -79,6 +76,8 @@ if [ $PYENV_ROOT ]; then
 fi
 
 # mac bash completion
+source $HOME/scripts/util_funcs.sh
+OS=$(get_platform)
 if [ $OS == "mac" ]; then
     if [ -f $(brew --prefix)/etc/bash_completion ]; then
         . $(brew --prefix)/etc/bash_completion

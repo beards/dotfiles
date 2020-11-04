@@ -103,7 +103,8 @@ alias gl='git log --pretty=format:"%Cgreen%h %Cblue%cn %Cred(%cd)%Creset:%n    %
 alias gl1='git log --pretty=format:"%Cgreen%h %Cblue%cn %Cred(%cd)%Creset: %s"'
 alias glg='git log --graph --abbrev-commit --decorate --date=relative --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)" --all'
 
-source $HOME/scripts/get_platform.sh
+source $HOME/scripts/util_funcs.sh
+OS=$(get_platform)
 if [ "$OS" = "debian" ]; then
     alias ack='ack-grep'
 elif [ "$OS" = "mac" ]; then
