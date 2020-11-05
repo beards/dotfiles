@@ -8,5 +8,19 @@ fi
 
 set -e
 
+# get options
+DO_UPGADE=0
+while test $# -gt 0
+do
+    case "$1" in
+        -u|--upgrade) DO_UPGRADE=1 ;;
+    esac
+    shift
+done
+
+# exec
 apt-get update -y
-apt-get upgrade -y
+if [ "$DO_UPGRADE" == "1" ]; then
+    apt-get upgrade -y
+fi
+

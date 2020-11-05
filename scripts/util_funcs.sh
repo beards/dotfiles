@@ -12,7 +12,7 @@ get_platform() {
         OS=mac
     elif [ -f /etc/redhat-release ]; then
         OS=redhat
-    elif [ -f /etc/lsb-release ]; then
+    elif [ -f /etc/debian_version ] || [ -f /etc/lsb-release ]; then
         OS=debian
     fi
 

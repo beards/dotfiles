@@ -27,22 +27,30 @@ else
 fi
 
 cd $DOTFILES_DIR
-stow zsh -t ~
-stow tmux -t ~
-stow autoenv -t ~
-stow links -t ~
+stow zsh --adopt -t ~
+stow tmux --adopt -t ~
+stow autoenv --adopt -t ~
+stow links --adopt -t ~
 
 $SCRIPT_DIR/installer/install.sh git_config
 
-stow bash -t ~
-stow screen -t ~
+stow bash --adopt -t ~
+stow screen --adopt -t ~
+
+if [ ! -z "`git status -s`" ]; then
+    CUR_BRANCH=`git rev-parse --abbrev-ref HEAD`
+    git checkout -b "stow-backup-`date -I`"
+    git add -u
+    git commit -m 'backup from stow --adopt'
+    git checkout $(CUR_BRANCH)
+fi
 
 echo -e "#"
 echo -e "# $SCRIPT_NAME: configure vim settings"
 echo -e "#"
 
 cd $DOTFILES_DIR
-stow vim -t ~
+stow vim --adopt -t ~
 $SCRIPT_DIR/installer/install.sh vim_plugin
 
 echo -e "#"

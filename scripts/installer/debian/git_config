@@ -13,5 +13,8 @@ git config --global alias.logg 'log --graph --abbrev-commit --decorate --date=re
 git config --global alias.sub submodule
 
 git config --global push.default current
+git config --global push.rebase true
 
 git config --global core.editor vim
+git config --global diff.tool vimdiff
+
