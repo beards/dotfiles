@@ -7,6 +7,8 @@ elif [ -f /etc/bash.bashrc ]; then
     . /etc/bash.bashrc
 fi
 
+source $HOME/scripts/util_funcs.sh
+
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
@@ -59,7 +61,7 @@ export LANGUAGE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
 # path
-export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+pathprepend /usr/local/sbin /usr/local/bin
 
 # autoenv
 . $HOME/scripts/autoenv/activate.sh
@@ -76,7 +78,6 @@ if [ $PYENV_ROOT ]; then
 fi
 
 # mac bash completion
-source $HOME/scripts/util_funcs.sh
 OS=$(get_platform)
 if [ $OS == "mac" ]; then
     if [ -f $(brew --prefix)/etc/bash_completion ]; then
@@ -102,7 +103,6 @@ alias gl1='git log --pretty=format:"%Cgreen%h %Cblue%cn %Cred(%cd)%Creset: %s"'
 alias glg='git log --graph --abbrev-commit --decorate --date=relative --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)" --all'
 alias g='git'
 alias p='pyenv'
-alias go='git checkout'
 __git_complete go _git_checkout
 
 if [ "$OS" == "debian" ]; then
@@ -112,4 +112,6 @@ elif [ $OS == "mac" ]; then
     alias ll='ls -vGal'
     alias cdsim='cd ~/Library/Application\ Support/iPhone\ Simulator/'
 fi
+
+source ~/.profile
 

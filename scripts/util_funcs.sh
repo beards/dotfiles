@@ -19,3 +19,22 @@ get_platform() {
     echo $OS
 }
 
+pathappend() {
+    for ARG in "$@"
+    do
+        if [ -d "$ARG" ] && [[ ":$PATH:" != *":$ARG:"* ]]; then
+            export PATH="${PATH:+"$PATH:"}$ARG"
+        fi
+    done
+}
+
+pathprepend() {
+    for ((i=$#; i>0; i--));
+    do
+        ARG=${@:$i:1}
+        if [ -d "$ARG" ] && [[ ":$PATH:" != *":$ARG:"* ]]; then
+            export PATH="$ARG${PATH:+":$PATH"}"
+        fi
+    done
+}
+

@@ -52,12 +52,12 @@ ZSH_THEME="bear" #gentoo #dogenpunk|dst #philips(strip)
 plugins=(git zsh-completions autoenv pyenv )
 
 # User configuration
-
-export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
-# export MANPATH="/usr/local/man:$MANPATH"
-
 source $ZSH/oh-my-zsh.sh
 
+source $HOME/scripts/util_funcs.sh
+pathprepend /usr/local/sbin /usr/local/bin
+
+# export MANPATH="/usr/local/man:$MANPATH"
 # disable ctrl-s
 stty -ixon
 
@@ -79,6 +79,9 @@ export LC_ALL=en_US.UTF-8
 # ssh
 # export SSH_KEY_PATH="~/.ssh/dsa_id"
 
+# Tells 'less' not to paginate if less than a page
+export LESS="-F -X $LESS"
+
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
@@ -87,34 +90,36 @@ export LC_ALL=en_US.UTF-8
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias ls='ls --color=auto'
-alias l='ls --color=auto -l'
-alias ll='ls --color=auto -la'
-alias la='ls --color=auto -a'
+OS=$(get_platform)
+if [ "$OS" = "debian" ]; then
+    alias ls='ls --color=auto'
+    alias l='ls --color=auto -l'
+    alias ll='ls --color=auto -la'
+    alias la='ls --color=auto -a'
+elif [ "$OS" = "mac" ]; then
+    alias ls='ls -vG'
+    alias l='ls -vG -l'
+    alias ll='ls -vG -la'
+    alias la='ls -vG -a'
 
-alias vi='vim'
-alias cdc='cd $HOME/_code/'
-alias cdgit='cd $HOME/github'
+    alias cdsim='cd ~/Library/Application\ Support/iPhone\ Simulator/'
+fi
 
 alias tm='tmux new -ADs'
 alias tml='tmux list-sessions'
 alias 0='tmux new -ADs 0'
 
+alias vi='vim'
+
 alias g='git'
 alias gs='git status'
+alias gdc='git diff --cached'
 alias gl='git log --pretty=format:"%Cgreen%h %Cblue%cn %Cred(%cd)%Creset:%n    %Cgreen%s%Creset" --name-status'
 alias gl1='git log --pretty=format:"%Cgreen%h %Cblue%cn %Cred(%cd)%Creset: %s"'
 alias glg='git log --graph --abbrev-commit --decorate --date=relative --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)" --all'
 
-source $HOME/scripts/util_funcs.sh
-OS=$(get_platform)
-if [ "$OS" = "debian" ]; then
-    alias ack='ack-grep'
-elif [ "$OS" = "mac" ]; then
-    alias ls='ls -vG'
-    alias ll='ls -vGal'
-    alias cdsim='cd ~/Library/Application\ Support/iPhone\ Simulator/'
-fi
+alias cdc='cd $HOME/_code/'
+alias cdgit='cd $HOME/github'
 
-source .profile
+source ~/.profile
 
