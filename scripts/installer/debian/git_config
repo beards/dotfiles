@@ -5,6 +5,7 @@ git config --global color.ui true
 git config --global alias.st status
 git config --global alias.br branch
 git config --global alias.co checkout
+git config --global alias.cp cherry-pick
 
 git config --global alias.log1 'log --pretty=format:"%Cgreen%h %Cblue%cn %Cred(%cd)%Creset: %s"'
 git config --global alias.logp 'log --pretty=format:"%Cgreen%h %Cblue%cn %Cred(%cd)%Creset:%n    %Cgreen%s%Creset" --name-status'
@@ -13,7 +14,7 @@ git config --global alias.logg 'log --graph --abbrev-commit --decorate --date=re
 git config --global alias.sub submodule
 
 git config --global push.default current
-git config --global push.rebase true
+git config --global pull.rebase true
 
 git config --global core.editor vim
 git config --global diff.tool vimdiff
