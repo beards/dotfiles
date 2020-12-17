@@ -63,9 +63,6 @@ export LC_ALL=en_US.UTF-8
 # path
 pathprepend /usr/local/sbin /usr/local/bin
 
-# autoenv
-. $HOME/scripts/autoenv/activate.sh
-
 # pyenv
 if [ -e $HOME/.pyenv ]; then
     export PYENV_ROOT="$HOME/.pyenv"
@@ -86,32 +83,5 @@ if [ $OS == "mac" ]; then
 fi
 
 # User specific aliases and functions
-alias ls='ls --color'
-alias ll='ls -al --color'
-alias grep='grep --color=always'
-alias less='less -R'
-alias vi='vim'
-alias sc='screen'
-alias sv='screen vim'
-alias cdc='cd $HOME/_code/'
-alias cdgit='cd $HOME/github'
-alias gs='git status'
-alias ga='git add'
-alias gd='git diff'
-alias gl='git log --pretty=format:"%Cgreen%h %Cblue%cn %Cred(%cd)%Creset:%n    %Cgreen%s%Creset" --name-status'
-alias gl1='git log --pretty=format:"%Cgreen%h %Cblue%cn %Cred(%cd)%Creset: %s"'
-alias glg='git log --graph --abbrev-commit --decorate --date=relative --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)" --all'
-alias g='git'
-alias p='pyenv'
-__git_complete go _git_checkout
-
-if [ "$OS" == "debian" ]; then
-    alias ack='ack-grep'
-elif [ $OS == "mac" ]; then
-    alias ls='ls -vG'
-    alias ll='ls -vGal'
-    alias cdsim='cd ~/Library/Application\ Support/iPhone\ Simulator/'
-fi
-
-source ~/.profile
+source .bash_aliases
 
