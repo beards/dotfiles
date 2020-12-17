@@ -83,5 +83,5 @@ if [ $OS == "mac" ]; then
 fi
 
 # User specific aliases and functions
-source .bash_aliases
+source ~/.bash_aliases
 
