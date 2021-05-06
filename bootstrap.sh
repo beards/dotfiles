@@ -42,7 +42,7 @@ if [ ! -z "`git status -s`" ]; then
     git checkout -b "stow-backup-`date -I`"
     git add -u
     git commit -m 'backup from stow --adopt'
-    git checkout $(CUR_BRANCH)
+    git checkout ${CUR_BRANCH}
 fi
 
 echo -e "#"
