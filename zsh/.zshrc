@@ -49,7 +49,7 @@ ZSH_THEME="steeef" #"bear" #gentoo #dogenpunk|dst #philips(strip)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-completions autoenv pyenv )
+plugins=(git autoenv pyenv zsh-autosuggestions)
 
 # User configuration
 source $ZSH/oh-my-zsh.sh

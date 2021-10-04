@@ -19,10 +19,19 @@ echo -e "#"
 echo -e "# $SCRIPT_NAME: apply shell env"
 echo -e "#"
 
-if [ ! -e ~/.oh-my-zsh ]; then
-    git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
+OH_MY_ZSH_DIR=~/.oh-my-zsh
+if [ ! -e $OH_MY_ZSH_DIR ]; then
+    git clone https://github.com/ohmyzsh/ohmyzsh.git $OH_MY_ZSH_DIR
 else
-    cd ~/.oh-my-zsh
+    cd $OH_MY_ZSH_DIR
+    git pull --rebase
+fi
+
+ZSH_AUTOSUGG_DIR=$OH_MY_ZSH_DIR/custom/plugins/zsh-autosuggestions
+if [ ! -e $ZSH_AUTOSUGG_DIR ]; then
+    git clone https://github.com/zsh-users/zsh-autosuggestions.git $ZSH_AUTOSUGG_DIR
+else
+    cd $ZSH_AUTOSUGG_DIR
     git pull --rebase
 fi
 
