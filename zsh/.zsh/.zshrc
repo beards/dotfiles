@@ -13,6 +13,9 @@ antigen theme steeef
 
 antigen apply
 
+# 256 colors
+export TERM=xterm-256color
+
 # set path
 source $HOME/scripts/util_funcs.sh
 pathprepend /usr/local/sbin /usr/local/bin
