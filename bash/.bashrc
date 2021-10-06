@@ -63,6 +63,11 @@ export LC_ALL=en_US.UTF-8
 # path
 pathprepend /usr/local/sbin /usr/local/bin
 
+# autoenv
+if [ -f ~/.autoenv/activate.sh ]; then
+    source ~/.autoenv/activate.sh
+fi
+
 # pyenv
 if [ -e $HOME/.pyenv ]; then
     export PYENV_ROOT="$HOME/.pyenv"

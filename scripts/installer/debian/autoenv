@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# clone the repo
+git clone https://github.com/hyperupcall/autoenv.git ~/.autoenv
+
+# apply to bashrc
+LINE='source ~/.autoenv/activate.sh'
+FILE=${HOME}/.bashrc
+grep -qF "$LINE" "$FILE" || echo "$LINE" >> $FILE
+
