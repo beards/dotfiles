@@ -1,24 +1,9 @@
-# use antigen to manage zsh plugins and themes
-source ~/.zsh/antigen.zsh
-
-antigen use oh-my-zsh
-
-antigen bundle git
-antigen bundle zsh-completions
-antigen bundle zsh-users/zsh-autosuggestions
-antigen bundle autoenv
-antigen bundle pyenv
-
-antigen theme steeef
-
-antigen apply
-
 # 256 colors
 export TERM=xterm-256color
 
-# set path
-source $HOME/scripts/util_funcs.sh
-pathprepend /usr/local/sbin /usr/local/bin
+# enable HOME/END key with xterm
+bindkey "\033[1~" beginning-of-line
+bindkey "\033[4~" end-of-line
 
 # set language environment
 export LANG=en_US.UTF-8
@@ -34,18 +19,30 @@ setopt no_nomatch
 # Tells 'less' not to paginate if less than a page
 export LESS="-F -X $LESS"
 
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
+# set path
+source $HOME/scripts/util_funcs.sh
+pathprepend /usr/local/sbin /usr/local/bin
 
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
+# pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+if [ -d "$PYENV_ROOT" ]; then
+    pathprepend $PYENV_ROOT/bin
+    eval "$(pyenv init --path)"
+fi
 
-# ssh
-# export SSH_KEY_PATH="~/.ssh/dsa_id"
+# use antigen to manage zsh plugins and themes
+source ~/.zsh/antigen.zsh
+antigen use oh-my-zsh
+antigen bundle git
+antigen bundle zsh-completions
+antigen bundle zsh-users/zsh-autosuggestions
+antigen bundle autoenv
+antigen bundle pyenv
+antigen bundle MikeDacre/tmux-zsh-vim-titles
+antigen theme steeef
+antigen apply
+
+DISABLE_AUTO_TITLE=false
 
 # alias
 OS=$(get_platform)
