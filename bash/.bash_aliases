@@ -35,6 +35,7 @@ alias d='docker'
 alias dc='docker container'
 alias di='docker image'
 alias dx='docker exec -it'
+alias dr='docker run -it --rm'
 
 alias cdc='cd $HOME/_code/'
 alias cdgit='cd $HOME/github'
