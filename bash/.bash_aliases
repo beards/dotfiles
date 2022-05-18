@@ -15,6 +15,10 @@ elif [ "$OS" = "mac" ]; then
     alias cdsim='cd ~/Library/Application\ Support/iPhone\ Simulator/'
 fi
 
+alias diff='diff --color=always'
+alias grep='grep --color=always'
+alias ack='ack --color --pager="less -R"'
+
 alias tm='tmux new -ADs'
 alias tml='tmux list-sessions'
 alias 0='tmux new -ADs 0'

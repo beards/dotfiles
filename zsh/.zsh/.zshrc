@@ -16,8 +16,9 @@ stty -ixon
 # Do not resolve * by zsh
 setopt no_nomatch
 
-# Tells 'less' not to paginate if less than a page
-export LESS="-F -X $LESS"
+# Tells 'less' not to paginate if less than a page,
+# and use raw control chars to accept colored contents
+export LESS="-R -F -X $LESS"
 
 # set path
 source $HOME/scripts/util_funcs.sh
