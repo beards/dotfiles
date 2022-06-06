@@ -2,6 +2,13 @@
 
 set -e
 
+which brew >/dev/null 2>&1
+exit=$?
+if [ $exit -eq 0 ]; then
+    echo "brew was already installed"
+    exit 0
+fi
+
 curl https://raw.githubusercontent.com/Homebrew/install/master/install -o brew_install
 ruby brew_install
 rm -f brew_install
