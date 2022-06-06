@@ -50,5 +50,10 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
-source ~/.profile
+if [ -z ~/.zprofile ]; then
+    source ~/.profile
+elif [ -z ~/.profile ]; then
+    source ~/.profile
+fi
+
 
