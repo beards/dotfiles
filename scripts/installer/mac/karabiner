@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -e
+
+brew install karabiner-elements
+
+SCRIPT_DIR="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && cd ../  && pwd )"
+KARABINER_RULE_DIR=~/.config/karabiner/assets/complex_modification
+mkdir -p $KARABINER_RULE_DIR &> /dev/null
+cp $SCRIPT_DIR/karabiner_assets/* $KARABINER_RULE_DIR/
+
