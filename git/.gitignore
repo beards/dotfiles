@@ -1,0 +1,14 @@
+# built output
+bin/
+
+# user env
+.env
+
+# editors
+[._]*.sw[a-p]
+Session.vim
+
+# mac os
+.DS_Store
+.AppleDouble
+.LSOverride

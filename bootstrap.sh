@@ -25,6 +25,7 @@ stow screen --adopt -t ~
 stow zsh --adopt -t ~
 stow tmux --adopt -t ~
 stow links --adopt -t ~
+stow git --adopt -t ~
 
 $SCRIPT_DIR/installer/install.sh autoenv
 
@@ -35,8 +36,6 @@ if [ ! -z "`git status -s`" ]; then
     git commit -m 'backup from stow --adopt'
     git checkout ${CUR_BRANCH}
 fi
-
-$SCRIPT_DIR/installer/install.sh git_config
 
 echo -e "#"
 echo -e "# $SCRIPT_NAME: configure vim settings"
