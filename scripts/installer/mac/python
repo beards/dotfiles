@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# install pyenv
+brew install pyenv
+
+# install python3
+pyenv install 3:latest
+PY_VER=$(pyenv versions | grep --color=no 3\. | tail -1 | tr -d '[:space:]')
+pyenv global $PY_VER
+
+# enable python command
+export PYENV_ROOT="$HOME/.pyenv"
+if [ -d "$PYENV_ROOT" ]; then
+    source ~/scripts/util_funcs.sh
+    pathprepend $PYENV_ROOT/bin
+    eval "$(pyenv init --path)"
+fi
+

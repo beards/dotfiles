@@ -3,8 +3,3 @@
 # install
 brew install autoenv
 
-# apply to bashrc
-LINE='source $(brew --prefix autoenv)/activate.sh'
-FILE=${HOME}/.bash_profile
-grep -qF "$LINE" "$FILE" || echo "$LINE" >> $FILE
-

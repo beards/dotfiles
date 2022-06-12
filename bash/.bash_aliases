@@ -6,13 +6,15 @@ if [ "$OS" = "debian" ]; then
     alias l='ls --color=auto -l'
     alias ll='ls --color=auto -la'
     alias la='ls --color=auto -a'
+
+    alias vi='vim'
 elif [ "$OS" = "mac" ]; then
     alias ls='ls -vG'
     alias l='ls -vG -l'
     alias ll='ls -vG -la'
     alias la='ls -vG -a'
 
-    alias cdsim='cd ~/Library/Application\ Support/iPhone\ Simulator/'
+    alias vi='mvim -v'
 fi
 
 alias diff='diff --color=always'
@@ -22,8 +24,6 @@ alias ack='ack --color --pager="less -R"'
 alias tm='tmux new -ADs'
 alias tml='tmux list-sessions'
 alias 0='tmux new -ADs 0'
-
-alias vi='vim'
 
 alias g='git'
 alias ga='git add'
