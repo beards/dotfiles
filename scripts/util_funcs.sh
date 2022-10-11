@@ -38,3 +38,8 @@ pathprepend() {
     done
 }
 
+add_config_line() {
+    LINE=$1
+    FILE=$2
+    grep -sxqF -- "$LINE" "$FILE" || echo "$LINE" >> "$FILE"
+}

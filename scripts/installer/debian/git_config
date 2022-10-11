@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
 
+USER=$(git config --list | grep user.name)
+if [ -z "$USER" ]; then
+    read -e -r -p "Git global user name: " USER
+    git config --global user.name "$USER"
+fi
+
+EMAIL=$(git config --list | grep user.email)
+if [ -z "$EMAIL" ]; then
+    read -e -p "Git global user email: " EMAIL
+    git config --global user.email "$EMAIL"
+fi
+
 git config --global color.ui true
 
 git config --global alias.st status
