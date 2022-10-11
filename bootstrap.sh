@@ -18,9 +18,11 @@ $SCRIPT_DIR/installer/install.sh package_manager
 if [ $(get_platform) == "mac" ] && [ -f "$HOME/.zprofile" ] ; then
     source ~/.zprofile
 fi
+
 $SCRIPT_DIR/installer/install.sh git
 $SCRIPT_DIR/installer/install.sh git_config
 $SCRIPT_DIR/installer/install.sh stow
+$SCRIPT_DIR/installer/install.sh diff
 
 echo -e "#"
 echo -e "# $SCRIPT_NAME: apply shell env"

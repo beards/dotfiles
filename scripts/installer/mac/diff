@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+brew install diffutils
+brew install diff-so-fancy
+
+# https://github.com/so-fancy/diff-so-fancy
+git config --global core.pager "diff-so-fancy | less --tabs=4 -RFX"
+git config --global interactive.diffFilter "diff-so-fancy --patch"
+

@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# clone the repo
+git clone https://github.com/so-fancy/diff-so-fancy.git /usr/local/src/diff-so-fancy
+
+# add path
+ln -s /usr/local/src/diff-so-fancy/diff-so-fancy /usr/local/bin/
+
+# config to git
+git config --global core.pager "diff-so-fancy | less --tabs=4 -RFX"
+git config --global interactive.diffFilter "diff-so-fancy --patch"
+
