@@ -33,6 +33,8 @@ fi
 
 # use antigen to manage zsh plugins and themes
 source ~/.zsh/antigen.zsh
+# disable auto-url-unescaping while pasting url to shell caused by oh-my-zsh
+DISABLE_MAGIC_FUNCTIONS=true
 antigen use oh-my-zsh
 antigen bundle git
 antigen bundle zsh-completions
