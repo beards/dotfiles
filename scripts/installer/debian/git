@@ -8,6 +8,6 @@ fi
 
 set -e
 
-apt-add-repository -y ppa:git-core/ppa
 apt-get update
-apt-get install -y git
+apt-get install -y git-all
+
