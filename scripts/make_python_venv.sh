@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-virtualenv --distribute .venv
+python -m venv .venv
 
 echo 'source $( dirname "${BASH_SOURCE[0]}" )/.venv/bin/activate' > .env
 
