@@ -33,7 +33,7 @@ alias gdc='git diff --cached'
 #alias gl='git log --pretty=format:"%Cgreen%h %Cblue%cn %Cred(%cd)%Creset:%n    %Cgreen%s%Creset" --name-status'
 alias gl='git log --pretty=format:"%Cgreen%h %Cblue%cn %Cred(%cd)%Creset: %C(bold yellow)%d%C(reset)%n    %Cgreen%s%Creset" --name-status'
 alias gl1='git log --pretty=format:"%Cgreen%h %Cblue%an %Cred(%ci)%Creset: %s %C(bold yellow)%d%C(reset)"'
-alias glg='git log --graph --abbrev-commit --decorate --date=relative --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)" --all'
+alias glg='git log --graph --abbrev-commit --decorate --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%as)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)" --all'
 
 alias d='docker'
 alias dc='docker container'
