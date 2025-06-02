@@ -1,20 +1,23 @@
 source $HOME/scripts/util_funcs.sh
 
 OS=$(get_platform)
-if [ "$OS" = "debian" ]; then
+if [ "$OS" = "mac" ]; then
     alias ls='ls --color=auto'
     alias l='ls --color=auto -l'
     alias ll='ls --color=auto -la'
     alias la='ls --color=auto -a'
-
+    alias vi='mvim -v'
+elif [ "$OS" = "debian" ]; then
     alias vi='vim'
-elif [ "$OS" = "mac" ]; then
     alias ls='ls -vG'
     alias l='ls -vG -l'
     alias ll='ls -vG -la'
     alias la='ls -vG -a'
-
-    alias vi='mvim -v'
+else
+    alias vi='vim'
+    alias l='ls -l'
+    alias ll='ls -la'
+    alias la='ls -a'
 fi
 
 alias diff='diff --color=always'

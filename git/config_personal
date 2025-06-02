@@ -1,0 +1,7 @@
+[user]
+name = bear
+email = bear.darkshine@gmail.com
+
+[core]
+sshCommand = "ssh -i ~/.ssh/id_personal"
+

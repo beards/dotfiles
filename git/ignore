@@ -1,12 +1,10 @@
-# built output
-bin/
-
 # user env
 .env
 
 # editors
 [._]*.sw[a-p]
 Session.vim
+.vscode
 
 # mac os
 .DS_Store

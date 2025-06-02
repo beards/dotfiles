@@ -14,33 +14,35 @@ echo -e "#"
 echo -e "# $SCRIPT_NAME: install necessary packages"
 echo -e "#"
 
-$SCRIPT_DIR/installer/install.sh package_manager
+exe $SCRIPT_DIR/installer/install.sh package_manager
+echo ??
 if [ $(get_platform) == "mac" ] && [ -f "$HOME/.zprofile" ] ; then
     source ~/.zprofile
 fi
 
-$SCRIPT_DIR/installer/install.sh git
-$SCRIPT_DIR/installer/install.sh git_config
-$SCRIPT_DIR/installer/install.sh stow
-$SCRIPT_DIR/installer/install.sh diff
+exe $SCRIPT_DIR/installer/install.sh git
+exe $SCRIPT_DIR/installer/install.sh stow
+exe $SCRIPT_DIR/installer/install.sh diff
 
 echo -e "#"
 echo -e "# $SCRIPT_NAME: apply shell env"
 echo -e "#"
 
 cd $DOTFILES_DIR
-stow bash --adopt -t ~
-stow screen --adopt -t ~
-stow zsh --adopt -t ~
-stow tmux --adopt -t ~
-stow git --adopt -t ~
-stow links --adopt -t ~
+exe stow bash --adopt -t ~
+exe stow screen --adopt -t ~
+exe stow zsh --adopt -t ~
+exe stow tmux --adopt -t ~
+exe stow links --adopt -t ~
 
-$SCRIPT_DIR/installer/install.sh autoenv
+mkdir -p ~/.config/git > /dev/null 2>&1
+exe stow git --adopt -t ~/.config/git
+
+exe $SCRIPT_DIR/installer/install.sh autoenv
 
 if [ ! -z "`git status -s`" ]; then
     CUR_BRANCH=`git rev-parse --abbrev-ref HEAD`
-    git checkout -b "stow-backup-$(date '+%Y-%m-%d')"
+    git checkout -b "stow-backup-$(date '+%Y-%m-%d_%H%M%S')"
     git add -u
     git commit -m 'backup from stow --adopt'
     git checkout ${CUR_BRANCH}
@@ -51,8 +53,8 @@ echo -e "# $SCRIPT_NAME: configure vim settings"
 echo -e "#"
 
 cd $DOTFILES_DIR
-stow vim --adopt -t ~
-$SCRIPT_DIR/installer/install.sh vim_plugin
+exe stow vim --adopt -t ~
+exe $SCRIPT_DIR/installer/install.sh vim_plugin
 
 echo -e "#"
 echo -e "# $SCRIPT_NAME: done !"
