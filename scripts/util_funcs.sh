@@ -43,3 +43,14 @@ add_config_line() {
     FILE=$2
     grep -sxqF -- "$LINE" "$FILE" || echo "$LINE" >> "$FILE"
 }
+
+_exe(){
+    [ $1 == on  ] && { set -x; return; } 2>/dev/null
+    [ $1 == off ] && { set +x; return; } 2>/dev/null
+    echo + "$@"
+    "$@"
+}
+exe(){
+    { _exe "$@"; } 2>/dev/null
+}
+
