@@ -44,6 +44,15 @@ add_config_line() {
     grep -sxqF -- "$LINE" "$FILE" || echo "$LINE" >> "$FILE"
 }
 
+function _add_config_if_not_set() {
+  local config=$1
+  local value=$2
+  local file=$3
+  if ! grep -q "^$config *=" "$file"; then
+    echo "$config = $value" >> "$file"
+  fi
+}
+
 _exe(){
     [ $1 == on  ] && { set -x; return; } 2>/dev/null
     [ $1 == off ] && { set +x; return; } 2>/dev/null
