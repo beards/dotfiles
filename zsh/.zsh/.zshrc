@@ -24,6 +24,11 @@ export LESS="-R -F -X $LESS"
 source $HOME/scripts/util_funcs.sh
 pathprepend /usr/local/sbin /usr/local/bin
 
+# path of homebrew python
+if command -v brew >/dev/null 2>&1; then
+    pathprepend "$(brew --prefix)/opt/python@3/libexec/bin"
+fi
+
 # pyenv
 export PYENV_ROOT="$HOME/.pyenv"
 if [ -d "$PYENV_ROOT" ]; then
