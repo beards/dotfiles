@@ -57,9 +57,7 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
-# local profile
-if [ -z ~/.profile ]; then
-    source ~/.profile
+# local rc
+if [ -f ~/.rc.local ]; then
+    source ~/.rc.local
 fi
-
-

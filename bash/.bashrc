@@ -90,3 +90,7 @@ fi
 # User specific aliases and functions
 source ~/.bash_aliases
 
+# local rc
+if [ -f ~/.rc.local ]; then
+    source ~/.rc.local
+fi
