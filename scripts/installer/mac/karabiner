@@ -4,8 +4,11 @@ set -e
 
 brew install karabiner-elements
 
-SCRIPT_DIR="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && cd ../  && pwd )"
-KARABINER_RULE_DIR=~/.config/karabiner/assets/complex_modification
-mkdir -p $KARABINER_RULE_DIR &> /dev/null
-cp $SCRIPT_DIR/karabiner_assets/* $KARABINER_RULE_DIR/
+SRC_DIR="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+SCRIPT_DIR="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && cd ../../  && pwd )"
 
+source ${SCRIPT_DIR}/util_funcs.sh
+
+mkdir -p ~/.config/karabiner &> /dev/null
+cd ${SRC_DIR}/.config
+exe stow karabiner --adopt -t ~/.config/karabiner
