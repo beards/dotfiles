@@ -1,0 +1,10 @@
+[user]
+	name = "Simon Hsiung"
+	email = simon_hsiung@txone.com
+
+[github]
+	user = "simon-hsiung"
+
+[core]
+	sshCommand = "ssh -i ~/.ssh/id_txpub"
+

@@ -1,7 +1,11 @@
 [include]
-	path = ~/.config/git/config_personal
+	path = ~/.config/git/config_txone
 [includeIf "gitdir:~/_personal"]
 	 path = ~/.config/git/config_personal
+[includeIf "gitdir:~/txone/"]
+	 path = ~/.config/git/config_txone
+[includeIf "gitdir:~/txone/_example/"]
+	 path = ~/.config/git/config_txone_pub
 [color]
 	ui = true
 [core]
