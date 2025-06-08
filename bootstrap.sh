@@ -15,7 +15,6 @@ echo -e "# $SCRIPT_NAME: install necessary packages"
 echo -e "#"
 
 exe $SCRIPT_DIR/installer/install.sh package_manager
-echo ??
 if [ $(get_platform) == "mac" ] && [ -f "$HOME/.zprofile" ] ; then
     source ~/.zprofile
 fi
