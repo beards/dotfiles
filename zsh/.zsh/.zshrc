@@ -23,6 +23,7 @@ export LESS="-R -F -X $LESS"
 # set path
 source $HOME/scripts/util_funcs.sh
 pathprepend /usr/local/sbin /usr/local/bin
+pathprepend $HOME/.local/bin
 
 # path of homebrew python
 if command -v brew >/dev/null 2>&1; then
