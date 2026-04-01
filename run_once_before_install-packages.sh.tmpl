@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+{{ if eq .chezmoi.os "darwin" -}}
+
+# Homebrew
+if ! command -v brew &>/dev/null; then
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
+brew install git git-lfs
+brew install diffutils diff-so-fancy
+brew install autoenv
+
+# configure diff-so-fancy for git
+git config --global core.pager "diff-so-fancy | less --tabs=4 -RFX"
+git config --global interactive.diffFilter "diff-so-fancy --patch"
+
+{{ else if eq .chezmoi.os "linux" -}}
+
+if [ -f /etc/debian_version ] || [ -f /etc/lsb-release ]; then
+    # Debian/Ubuntu
+    sudo apt-get update -y
+    sudo apt-get install -y git-all
+
+    # diff-so-fancy
+    if [ ! -f /usr/local/bin/diff-so-fancy ]; then
+        sudo git clone https://github.com/so-fancy/diff-so-fancy.git /usr/local/src/diff-so-fancy
+        sudo ln -sf /usr/local/src/diff-so-fancy/diff-so-fancy /usr/local/bin/
+    fi
+    git config --global core.pager "diff-so-fancy | less --tabs=4 -RFX"
+    git config --global interactive.diffFilter "diff-so-fancy --patch"
+
+    # autoenv
+    if [ ! -d "$HOME/.autoenv" ]; then
+        git clone https://github.com/hyperupcall/autoenv.git ~/.autoenv
+    fi
+
+elif [ -f /etc/redhat-release ]; then
+    # Red Hat/CentOS
+    sudo yum -y update
+    sudo yum -y install epel-release
+    sudo yum -y install dnf
+
+    # autoenv
+    if [ ! -d "$HOME/.autoenv" ]; then
+        git clone https://github.com/hyperupcall/autoenv.git ~/.autoenv
+    fi
+fi
+
+{{ end -}}

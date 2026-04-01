@@ -9,6 +9,5 @@ SCRIPT_DIR="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && cd ../../  && pwd )"
 
 source ${SCRIPT_DIR}/util_funcs.sh
 
-mkdir -p ~/.config/karabiner &> /dev/null
-cd ${SRC_DIR}/.config
-exe stow karabiner --adopt -t ~/.config/karabiner
+mkdir -p ~/.config/karabiner/assets/complex_modifications &> /dev/null
+cp -r ${SRC_DIR}/config_files/karabiner/ ~/.config/karabiner/

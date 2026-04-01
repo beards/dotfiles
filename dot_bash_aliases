@@ -1,16 +1,10 @@
 source $HOME/scripts/util_funcs.sh
 
-OS=$(get_platform)
-if [ "$OS" = "mac" ]; then
-    alias vi='mvim -v'
-else
-    alias vi='vim'
-fi
-
-alias ls='ls --color=auto -N'
-alias l='ls --color=auto -lN'
-alias ll='ls --color=auto -laN'
-alias la='ls --color=auto -aN'
+alias vi='vim'
+alias ls='ls --color=auto'
+alias l='ls --color=auto -l'
+alias ll='ls --color=auto -la'
+alias la='ls --color=auto -a'
 
 alias diff='diff --color=always'
 alias grep='grep --color=always'
@@ -37,6 +31,8 @@ alias dc='docker container'
 alias di='docker image'
 alias dx='docker exec -it'
 alias dr='docker run -it --rm'
+
+alias cz='chezmoi'
 
 alias cdc='cd $HOME/_code/'
 alias cdgit='cd $HOME/github'
