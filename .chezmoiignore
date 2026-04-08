@@ -4,3 +4,7 @@ LICENSE
 .config/git/config_txone
 .config/git/config_txone_pub
 {{- end }}
+{{ if ne .chezmoi.os "darwin" -}}
+.config/karabiner
+.config/karabiner/**
+{{- end }}
