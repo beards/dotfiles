@@ -1,7 +1,17 @@
 [include]
+{{- if eq .profile "work" }}
+	path = ~/.config/git/config_txone
+{{- else }}
 	path = ~/.config/git/config_personal
-[includeIf "gitdir:~/_personal"]
+{{- end }}
+[includeIf "gitdir:~/_personal/"]
 	 path = ~/.config/git/config_personal
+{{- if eq .profile "work" }}
+[includeIf "gitdir:~/txone/"]
+	 path = ~/.config/git/config_txone
+[includeIf "gitdir:~/txone/_example/"]
+	 path = ~/.config/git/config_txone_pub
+{{- end }}
 [color]
 	ui = true
 [core]

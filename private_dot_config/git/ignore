@@ -10,3 +10,6 @@ Session.vim
 .DS_Store
 .AppleDouble
 .LSOverride
+
+# machine-wise settings
+**/.claude/settings.local.json

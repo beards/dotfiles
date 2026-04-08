@@ -1,0 +1,9 @@
+[user]
+	name = "Simon Hsiung"
+	email = simon_hsiung@txone.com
+
+[github]
+	user = "Simon-Hsiung_txone"
+
+[core]
+	sshCommand = "ssh -i ~/.ssh/id_txone"
