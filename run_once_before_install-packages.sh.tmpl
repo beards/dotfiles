@@ -13,6 +13,7 @@ fi
 brew install git git-lfs
 brew install diffutils diff-so-fancy
 brew install autoenv
+brew install macvim
 
 brew install --cask karabiner-elements
 
@@ -25,7 +26,7 @@ git config --global interactive.diffFilter "diff-so-fancy --patch"
 if [ -f /etc/debian_version ] || [ -f /etc/lsb-release ]; then
     # Debian/Ubuntu
     sudo apt-get update -y
-    sudo apt-get install -y git-all
+    sudo apt-get install -y git-all vim-nox
 
     # diff-so-fancy
     if [ ! -f /usr/local/bin/diff-so-fancy ]; then
@@ -45,6 +46,7 @@ elif [ -f /etc/redhat-release ]; then
     sudo yum -y update
     sudo yum -y install epel-release
     sudo yum -y install dnf
+    sudo yum -y install vim-enhanced
 
     # autoenv
     if [ ! -d "$HOME/.autoenv" ]; then
