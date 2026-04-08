@@ -1,5 +1,26 @@
+{{- /*
+  Auto-detect tmux version to pick the right syntax.
+  tmux 2.9 unified the -style options and the mouse option, and removed
+  the UTF8 options. Anything 1.x or 2.0-2.8 needs the old syntax.
+*/ -}}
+{{- $tmuxOld := false -}}
+{{- if lookPath "tmux" -}}
+{{-   $v := output "tmux" "-V" -}}
+{{-   if regexMatch "tmux (1\\.|2\\.[0-8])" $v -}}
+{{-     $tmuxOld = true -}}
+{{-   end -}}
+{{- end -}}
+{{ if $tmuxOld -}}
+# use UTF8
+set -g utf8
+setw -g utf8 on
+
+# make tmux display things in 256 colors
+set -g default-terminal "screen-256color"
+{{- else -}}
 # make tmux display things in 256 colors
 set -g default-terminal "tmux-256color"
+{{- end }}
 
 # for putty
 set -g terminal-overrides "xterm*:kLFT5=\eOD:kRIT5=\eOC:kUP5=\eOA:kDN5=\eOB:smkx@:rmkx@"
@@ -28,7 +49,9 @@ set -g mode-keys vi
 set -g status-keys vi
 
 # window operations
+{{ if not $tmuxOld -}}
 setw -g xterm-keys on
+{{ end -}}
 bind -n C-left previous-window
 bind -n C-right next-window
 bind < swap-window -t -1
@@ -48,40 +71,89 @@ bind H resize-pane -L 5
 bind L resize-pane -R 5
 
 # pane border
+{{ if $tmuxOld -}}
+set -g pane-border-fg colour95
+set -g pane-active-border-fg white
+{{- else -}}
 set -g pane-border-style fg=colour95
 set -g pane-active-border-style fg=white
+{{- end }}
 
 # status bar
 set -g status on
+{{ if $tmuxOld -}}
+set -g status-utf8 on
+{{ end -}}
 set -g status-interval 5  # set update frequencey (default 15 seconds)
+{{ if $tmuxOld -}}
+set -g status-bg colour234
+set -g status-fg colour7
+set -g status-attr dim
+{{- else -}}
 set -g status-style bg=colour234,fg=colour7,dim
+{{- end }}
 set -g status-left ' #[fg=colour71]#(whoami)@#H:#[fg=colour99][#S]    '
 set -g status-left-length 70
 set -g status-right '  #[fg=colour71] #(date +"%b %_d \(%a\) %H:%M") '
 set -g status-right-length 50
 
+{{ if $tmuxOld -}}
+setw -g automatic-rename on
+set -g window-status-current-fg colour190
+{{- else -}}
 setw -g automatic-rename off  # avoid window name rewrite by tmux
 set -g allow-rename on  # let oh-my-zsh update window name
 set -g window-status-current-style fg=colour190
+{{- end }}
 setw -g window-status-current-format '#I:[#W]#F'
 setw -g window-status-format '#I:[#W]#F'
 
 # dont beep
 set -g bell-action none
+{{ if $tmuxOld -}}
+set -g bell-on-alert off
+{{ end -}}
 set -g visual-bell off
 
 setw -g monitor-activity on
+{{ if $tmuxOld -}}
+setw -g window-status-activity-attr none
+setw -g window-status-activity-bg colour89
+setw -g window-status-activity-fg colour7
+{{- else -}}
 setw -g window-status-activity-style bg=colour89,fg=colour7
+{{- end }}
 
 # disable mouse control by default - change 'off' to 'on' to enable by default.
+{{ if $tmuxOld -}}
+setw -g mode-mouse off
+set -g mouse-resize-pane off
+set -g mouse-select-pane off
+set -g mouse-select-window off
+{{- else -}}
 setw -g mouse off
+{{- end }}
 # toggle mouse mode to allow mouse copy/paste
 # set mouse on with prefix m
 bind m \
+{{- if $tmuxOld }}
+    set -g mode-mouse on \;\
+    set -g mouse-resize-pane on \;\
+    set -g mouse-select-pane on \;\
+    set -g mouse-select-window on \;\
+{{- else }}
     set -g mouse on \;\
+{{- end }}
     display 'Mouse: ON'
 # set mouse off with prefix M
 bind M \
+{{- if $tmuxOld }}
+    set -g mode-mouse off \;\
+    set -g mouse-resize-pane off \;\
+    set -g mouse-select-pane off \;\
+    set -g mouse-select-window off \;\
+{{- else }}
     set -g mouse off \;\
+{{- end }}
     display 'Mouse: OFF'
 
