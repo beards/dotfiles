@@ -8,3 +8,8 @@ LICENSE
 .config/karabiner
 .config/karabiner/**
 {{- end }}
+{{ if .minimal -}}
+install-packages.sh
+install-vim-plugins.sh
+.vim/bundle/vundle
+{{- end }}

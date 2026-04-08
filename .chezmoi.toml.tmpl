@@ -1,4 +1,6 @@
 {{- $profile := promptStringOnce . "profile" "Profile (personal/work)" -}}
+{{- $minimal := promptBoolOnce . "minimal" "Minimal deploy (skip installers, for old/restricted machines)" false -}}
 
 [data]
     profile = {{ $profile | quote }}
+    minimal = {{ $minimal }}
