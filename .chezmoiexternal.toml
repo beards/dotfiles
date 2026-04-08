@@ -1,6 +1,4 @@
-[".vim"]
+[".vim/bundle/vundle"]
     type = "git-repo"
-    url = "https://github.com/beards/vimrc.git"
+    url = "https://github.com/gmarik/vundle.git"
     refreshPeriod = "168h"
-    clone.args = ["--recurse-submodules"]
-    pull.args = ["--recurse-submodules"]

@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+#
+# Run Vundle's :BundleInstall when the plugin list changes.
+# The embedded hash ensures this script re-runs whenever
+# dot_vim/dot_vimrc_plugins is updated.
+#
+# .vimrc_plugins sha256: {{ include "dot_vim/dot_vimrc_plugins" | sha256sum }}
+
+set -euo pipefail
+
+if ! command -v vim >/dev/null 2>&1; then
+    echo "vim not installed, skipping BundleInstall"
+    exit 0
+fi
+
+if [ ! -d "$HOME/.vim/bundle/vundle" ]; then
+    echo "vundle not yet installed, skipping BundleInstall"
+    exit 0
+fi
+
+vim +BundleInstall +qall
