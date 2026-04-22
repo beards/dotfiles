@@ -75,24 +75,45 @@ You still get shell rc files, aliases, tmux/screen config, and vimrc — enough 
 
 When you have a working machine and want to bootstrap a brand-new box over SSH without first installing chezmoi on the remote, use any of these in order of preference.
 
-### Option A — one-shot init over SSH (simplest)
+### Option A — `chezmoi ssh` (simplest, non-interactive)
 
-From your local shell, run chezmoi on the remote via SSH. This installs chezmoi to `~/.local/bin` on the remote and applies your repo:
+`chezmoi ssh` connects to the remote, installs chezmoi, runs `chezmoi init --apply`, and launches your shell. Everything after `--` is forwarded to `chezmoi init --apply` on the remote, including `--prompt*` flags to pre-seed answers for the prompts in `.chezmoi.toml.tmpl`.
 
 ```sh
-ssh user@newhost 'sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply <your-user>/dotfiles'
+chezmoi ssh user@newhost -- \
+  --promptString profile=personal \
+  --promptBool minimal=false \
+  <your-user>/dotfiles
 ```
+
+Variants:
+
+```sh
+# Work machine
+chezmoi ssh user@workbox -- --promptString profile=work --promptBool minimal=false <your-user>/dotfiles
+
+# Old / restricted box — skip package installs and vim plugin setup
+chezmoi ssh user@oldbox -- --promptString profile=personal --promptBool minimal=true <your-user>/dotfiles
+
+# One-shot (don't leave chezmoi state on the remote after apply)
+chezmoi ssh user@throwaway -- --one-shot --promptString profile=personal --promptBool minimal=false <your-user>/dotfiles
+```
+
+Useful flags:
+
+- `-p, --package-manager apt-get|brew|dnf|...` — force a specific installer on the remote; otherwise chezmoi falls back to `curl`/`wget`.
+- `--promptString k=v,k2=v2` / `--promptBool` / `--promptChoice` / `--promptInt` — pre-seed any prompt by key. Skip these and you'll be asked interactively.
+- `--promptDefaults` — use defaults for every prompt. Don't use it here: `profile` has no default, so it will fail or end up empty.
 
 Notes:
 
 - chezmoi accepts `<github-user>/<repo>` shorthand; it resolves to `https://github.com/<your-user>/dotfiles.git`.
-- If the repo is private, pre-add your SSH key to GitHub on the new box (or use `--ssh`) — chezmoi will then clone via SSH.
-- You will still be prompted for `profile` and `minimal` interactively. Add `-t` to `ssh` to force a TTY: `ssh -t user@newhost '...'`.
-- Add `~/.local/bin` to `$PATH` afterwards (the shell rc files handle this once they're applied and you re-login).
+- Private repo: pre-add an SSH key on the new box and use `--ssh` so chezmoi clones via SSH.
+- `chezmoi ssh` is marked experimental in the docs — if it misbehaves, fall back to Option B.
 
-### Option B — pre-seed answers (non-interactive)
+### Option B — manual `curl | sh` over SSH (fallback)
 
-To skip the prompts (useful for scripted provisioning), write `.chezmoi.toml` on the remote first, then init:
+If `chezmoi ssh` isn't available or fails, do it by hand. Write `.chezmoi.toml` first to pre-seed prompt answers, then install chezmoi and init:
 
 ```sh
 ssh -t user@newhost bash -s <<'EOF'
@@ -106,7 +127,7 @@ sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply <your-user>/dotfiles
 EOF
 ```
 
-For a locked-down box, flip `minimal = true` to skip package installs and vim plugin setup.
+For a locked-down box, flip `minimal = true`. Add `~/.local/bin` to `$PATH` afterwards (the shell rc files handle this once re-login).
 
 ### Option C — push source tree directly (no GitHub access)
 
