@@ -39,7 +39,7 @@ sh -c "$(curl -fsLS get.chezmoi.io)" -- -b ~/.local/bin
 ### 2. Init + apply
 
 ```sh
-chezmoi init --apply https://github.com/<your-user>/dotfiles.git
+chezmoi init --apply https://github.com/beards/dotfiles.git
 ```
 
 You will be prompted for:
@@ -83,20 +83,20 @@ When you have a working machine and want to bootstrap a brand-new box over SSH w
 chezmoi ssh user@newhost -- \
   --promptString profile=personal \
   --promptBool minimal=false \
-  <your-user>/dotfiles
+  beards/dotfiles
 ```
 
 Variants:
 
 ```sh
 # Work machine
-chezmoi ssh user@workbox -- --promptString profile=work --promptBool minimal=false <your-user>/dotfiles
+chezmoi ssh user@workbox -- --promptString profile=work --promptBool minimal=false beards/dotfiles
 
 # Old / restricted box — skip package installs and vim plugin setup
-chezmoi ssh user@oldbox -- --promptString profile=personal --promptBool minimal=true <your-user>/dotfiles
+chezmoi ssh user@oldbox -- --promptString profile=personal --promptBool minimal=true beards/dotfiles
 
 # One-shot (don't leave chezmoi state on the remote after apply)
-chezmoi ssh user@throwaway -- --one-shot --promptString profile=personal --promptBool minimal=false <your-user>/dotfiles
+chezmoi ssh user@throwaway -- --one-shot --promptString profile=personal --promptBool minimal=false beards/dotfiles
 ```
 
 Useful flags:
@@ -107,7 +107,7 @@ Useful flags:
 
 Notes:
 
-- chezmoi accepts `<github-user>/<repo>` shorthand; it resolves to `https://github.com/<your-user>/dotfiles.git`.
+- chezmoi accepts `<github-user>/<repo>` shorthand; it resolves to `https://github.com/beards/dotfiles.git`.
 - Private repo: pre-add an SSH key on the new box and use `--ssh` so chezmoi clones via SSH.
 - `chezmoi ssh` is marked experimental in the docs — if it misbehaves, fall back to Option B.
 
@@ -123,7 +123,7 @@ cat > ~/.config/chezmoi/chezmoi.toml <<'TOML'
     profile = "personal"
     minimal = false
 TOML
-sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply <your-user>/dotfiles
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply beards/dotfiles
 EOF
 ```
 
