@@ -1,12 +1,24 @@
 {
   "permissions": {
+    "defaultMode": "auto",
+    "__deny": [
+      "Bash(git reset --hard *)",
+      "Bash(git rebase *)"
+    ],
     "deny": [
       "Bash(git push --force *)",
       "Bash(git push -f *)",
-      "Bash(git reset --hard *)",
-      "Bash(git rebase *)",
       "Bash(git filter-branch *)"
     ]
+  },
+  "autoMode": {
+      "allow": [
+          "Making change under source control is allowed: everything is revertable"
+      ],
+      "soft_deny": [
+          "Do not run commands like `git rebase` or `git reset --hard` to break the source control history unless user explicitly ask to do that",
+          "Never do `git push --force`"
+      ]
   },
   "hooks": {
     "PreToolUse": [
