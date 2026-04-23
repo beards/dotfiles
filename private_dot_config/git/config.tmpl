@@ -6,6 +6,8 @@
 {{- end }}
 [includeIf "gitdir:~/_personal/"]
 	 path = ~/.config/git/config_personal
+[includeIf "gitdir:~/.local/"]
+	 path = ~/.config/git/config_personal
 {{- if eq .profile "work" }}
 [includeIf "gitdir:~/txone/"]
 	 path = ~/.config/git/config_txone
