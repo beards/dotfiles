@@ -34,5 +34,6 @@
     ]
   },
   "language": "traditional chinese",
-  "skipDangerousModePermissionPrompt": true
+  "skipDangerousModePermissionPrompt": true,
+  "skipAutoPermissionPrompt": true
 }

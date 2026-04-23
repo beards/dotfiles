@@ -43,4 +43,4 @@ streamlink() {
   command streamlink "$1" best --output "$(date +%Y-%m-%d).mp4" --retry-streams 30 --retry-open 99
 }
 
-alias c='copilot --yolo'
+alias c='copilot --yolo --experimental'
