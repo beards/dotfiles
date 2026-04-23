@@ -75,59 +75,58 @@ You still get shell rc files, aliases, tmux/screen config, and vimrc — enough 
 
 When you have a working machine and want to bootstrap a brand-new box over SSH without first installing chezmoi on the remote, use any of these in order of preference.
 
-### Option A — `chezmoi ssh` (simplest, non-interactive)
+### How profile prompts are resolved (non-interactive)
 
-`chezmoi ssh` connects to the remote, installs chezmoi, runs `chezmoi init --apply`, and launches your shell. Everything after `--` is forwarded to `chezmoi init --apply` on the remote, including `--prompt*` flags to pre-seed answers for the prompts in `.chezmoi.toml.tmpl`.
+`.chezmoi.toml.tmpl` resolves `profile` and `minimal` in this order:
+
+1. **Env vars** `CHEZMOI_PROFILE` / `CHEZMOI_MINIMAL` — set these for fully non-interactive deploys.
+2. **Existing config** — if `~/.config/chezmoi/chezmoi.toml` already has values (e.g. a re-apply), they are reused.
+3. **Interactive prompt** — only when stdin is a real TTY (i.e. a normal local init).
+4. **Silent default** — if none of the above apply (non-TTY, no env, no prior config), `profile` falls back to `"personal"` and `minimal` to `false`.
+
+### Option A — `chezmoi ssh` + env vars (recommended)
+
+`chezmoi ssh` connects to the remote, installs chezmoi, and runs `chezmoi init --apply`. Pass `CHEZMOI_PROFILE` / `CHEZMOI_MINIMAL` via the environment to pre-seed the prompts without needing a TTY.
+
+> **Note:** `chezmoi ssh` does **not** allocate a pseudo-TTY, so interactive prompts will fail. Always supply the env vars below.
 
 ```sh
-chezmoi ssh user@newhost -- \
-  --promptString profile=personal \
-  --promptBool minimal=false \
-  beards/dotfiles
+CHEZMOI_PROFILE=personal CHEZMOI_MINIMAL=false \
+  chezmoi ssh user@newhost -- beards/dotfiles
 ```
 
 Variants:
 
 ```sh
 # Work machine
-chezmoi ssh user@workbox -- --promptString profile=work --promptBool minimal=false beards/dotfiles
+CHEZMOI_PROFILE=work CHEZMOI_MINIMAL=false \
+  chezmoi ssh user@workbox -- beards/dotfiles
 
 # Old / restricted box — skip package installs and vim plugin setup
-chezmoi ssh user@oldbox -- --promptString profile=personal --promptBool minimal=true beards/dotfiles
+CHEZMOI_PROFILE=personal CHEZMOI_MINIMAL=true \
+  chezmoi ssh user@oldbox -- beards/dotfiles
 
 # One-shot (don't leave chezmoi state on the remote after apply)
-chezmoi ssh user@throwaway -- --one-shot --promptString profile=personal --promptBool minimal=false beards/dotfiles
+CHEZMOI_PROFILE=personal CHEZMOI_MINIMAL=false \
+  chezmoi ssh user@throwaway -- --one-shot beards/dotfiles
 ```
 
 Useful flags:
 
 - `-p, --package-manager apt-get|brew|dnf|...` — force a specific installer on the remote; otherwise chezmoi falls back to `curl`/`wget`.
-- `--promptString k=v,k2=v2` / `--promptBool` / `--promptChoice` / `--promptInt` — pre-seed any prompt by key. Skip these and you'll be asked interactively.
-- `--promptDefaults` — use defaults for every prompt. Don't use it here: `profile` has no default, so it will fail or end up empty.
-
-Notes:
-
-- chezmoi accepts `<github-user>/<repo>` shorthand; it resolves to `https://github.com/beards/dotfiles.git`.
-- Private repo: pre-add an SSH key on the new box and use `--ssh` so chezmoi clones via SSH.
+- `--one-shot` — apply and remove chezmoi state afterwards.
 - `chezmoi ssh` is marked experimental in the docs — if it misbehaves, fall back to Option B.
 
-### Option B — manual `curl | sh` over SSH (fallback)
+### Option B — manual `ssh` (fallback)
 
-If `chezmoi ssh` isn't available or fails, do it by hand. Write `.chezmoi.toml` first to pre-seed prompt answers, then install chezmoi and init:
+If `chezmoi ssh` isn't available or fails, install chezmoi and init directly over SSH:
 
 ```sh
-ssh -t user@newhost bash -s <<'EOF'
-mkdir -p ~/.config/chezmoi
-cat > ~/.config/chezmoi/chezmoi.toml <<'TOML'
-[data]
-    profile = "personal"
-    minimal = false
-TOML
-sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply beards/dotfiles
-EOF
+ssh user@newhost 'curl -fsSL https://get.chezmoi.io | sh -s -- -b ~/.local/bin && \
+  CHEZMOI_PROFILE=personal CHEZMOI_MINIMAL=false ~/.local/bin/chezmoi init --apply beards/dotfiles'
 ```
 
-For a locked-down box, flip `minimal = true`. Add `~/.local/bin` to `$PATH` afterwards (the shell rc files handle this once re-login).
+For a work machine, use `CHEZMOI_PROFILE=work`. For a locked-down box, `CHEZMOI_MINIMAL=true`.
 
 ### Option C — push source tree directly (no GitHub access)
 
@@ -137,13 +136,12 @@ If the remote can't reach GitHub (air-gapped, behind a corporate proxy, etc.), c
 # from your local machine
 rsync -az --delete ~/.local/share/chezmoi/ user@newhost:/tmp/chezmoi-src/
 
-ssh -t user@newhost bash -s <<'EOF'
-sh -c "$(curl -fsLS get.chezmoi.io)" -- -b ~/.local/bin
-~/.local/bin/chezmoi init --apply --source=/tmp/chezmoi-src
-EOF
+ssh user@newhost 'sh -c "$(curl -fsLS get.chezmoi.io)" -- -b ~/.local/bin && \
+  CHEZMOI_PROFILE=personal CHEZMOI_MINIMAL=false \
+  ~/.local/bin/chezmoi init --apply --source=/tmp/chezmoi-src'
 ```
 
-If even `curl | sh` is blocked, scp the chezmoi binary (`brew --prefix chezmoi`/bin or a release tarball) to `~/.local/bin/chezmoi` on the remote first, then run just the `chezmoi init --apply --source=...` line.
+If even `curl | sh` is blocked, scp the chezmoi binary to `~/.local/bin/chezmoi` on the remote first, then run just the `chezmoi init --apply --source=...` line.
 
 ### Keeping the remote in sync later
 
@@ -153,7 +151,7 @@ Once the remote is bootstrapped, future updates are a one-liner from anywhere:
 ssh user@newhost 'chezmoi update'     # git pull + apply
 ```
 
-Or push local uncommitted tweaks for quick iteration (skip this if you've already committed and pushed):
+Or push local uncommitted tweaks for quick iteration:
 
 ```sh
 rsync -az ~/.local/share/chezmoi/ user@newhost:.local/share/chezmoi/

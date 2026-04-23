@@ -1,5 +1,23 @@
-{{- $profile := promptStringOnce . "profile" "Profile (personal/work)" -}}
-{{- $minimal := promptBoolOnce . "minimal" "Minimal deploy (skip installers, for old/restricted machines)" false -}}
+{{- $profile := env "CHEZMOI_PROFILE" -}}
+{{- if eq $profile "" -}}
+{{-   if hasKey . "profile" -}}
+{{-     $profile = .profile -}}
+{{-   else if stdinIsATTY -}}
+{{-     $profile = promptStringOnce . "profile" "Profile (personal/work)" -}}
+{{-   else -}}
+{{-     $profile = "personal" -}}
+{{-   end -}}
+{{- end -}}
+
+{{- $minimalEnv := env "CHEZMOI_MINIMAL" -}}
+{{- $minimal := false -}}
+{{- if hasKey . "minimal" -}}
+{{-   $minimal = .minimal -}}
+{{- else if ne $minimalEnv "" -}}
+{{-   $minimal = eq $minimalEnv "true" -}}
+{{- else if stdinIsATTY -}}
+{{-   $minimal = promptBoolOnce . "minimal" "Minimal deploy (skip installers, for old/restricted machines)" false -}}
+{{- end -}}
 
 [data]
     profile = {{ $profile | quote }}
