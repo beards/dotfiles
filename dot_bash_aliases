@@ -32,10 +32,9 @@ alias di='docker image'
 alias dx='docker exec -it'
 alias dr='docker run -it --rm'
 
-alias cz='chezmoi'
+alias cm='chezmoi'
 
-alias claude='claude --allow-dangerously-skip-permissions'
-alias ca='claude'
+alias cc='claude --allow-dangerously-skip-permissions'
 
 alias cdc='cd $HOME/_code/'
 alias cdgit='cd $HOME/github'
