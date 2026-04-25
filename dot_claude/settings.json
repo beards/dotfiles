@@ -1,24 +1,15 @@
 {
   "permissions": {
-    "defaultMode": "auto",
-    "__deny": [
-      "Bash(git reset --hard *)",
-      "Bash(git rebase *)"
-    ],
     "deny": [
       "Bash(git push --force *)",
       "Bash(git push -f *)",
       "Bash(git filter-branch *)"
+    ],
+    "defaultMode": "auto",
+    "__deny": [
+      "Bash(git reset --hard *)",
+      "Bash(git rebase *)"
     ]
-  },
-  "autoMode": {
-      "allow": [
-          "Making change under source control is allowed: everything is revertable"
-      ],
-      "soft_deny": [
-          "Do not run commands like `git rebase` or `git reset --hard` to break the source control history unless user explicitly ask to do that",
-          "Never do `git push --force`"
-      ]
   },
   "hooks": {
     "PreToolUse": [
@@ -33,7 +24,34 @@
       }
     ]
   },
+  "enabledPlugins": {
+    "codex@openai-codex": true,
+    "superpowers@claude-plugins-official": true,
+    "discord@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "context7@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true,
+    "serena@claude-plugins-official": false,
+    "code-simplifier@claude-plugins-official": true
+  },
   "language": "traditional chinese",
   "skipDangerousModePermissionPrompt": true,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "autoMode": {
+    "allow": [
+      "Making change under source control is allowed: everything is revertable"
+    ],
+    "soft_deny": [
+      "Do not run commands like `git rebase` or `git reset --hard` to break the source control history unless user explicitly ask to do that",
+      "Never do `git push --force`"
+    ]
+  },
+  "effortLevel": "xhigh",
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh"
+  }
 }
