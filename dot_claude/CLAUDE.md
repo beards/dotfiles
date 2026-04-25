@@ -11,3 +11,12 @@ Configured in `~/.claude/settings.json`:
 - **Hook: `~/.claude/check-permission.sh`** runs on every Edit/Write/Bash/NotebookEdit. If it rejects a command, read its output and adjust rather than retrying.
 - **Language: Traditional Chinese (正體中文)** for all user-facing text. Code, identifiers, and in-code comments stay in English.
 
+## Answering "how do I X?" / solution requests
+
+When the user asks how to do something, or asks for a solution to a problem, **do not rely on model knowledge alone**. Verify against the current world before answering:
+
+- **Use tools or web search** to check whether a mature, established approach already exists. Model training data lags reality — assume your prior knowledge is stale until confirmed.
+- **For specific tools, languages, libraries, SDKs, or APIs:** consult the official documentation (via `context7` MCP, official docs sites, or `--help`/`man`). Never guess flag names, API signatures, or config keys.
+- **Present options ranked by viability**, not just one answer. For each option give: a short description, main pros/cons, and **a source link** (official docs, RFC, repo, well-known blog post). The user should be able to dig deeper or ask follow-ups from the citation alone.
+- Keep each option brief — depth lives behind the link, not in the response.
+
