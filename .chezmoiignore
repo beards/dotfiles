@@ -1,5 +1,6 @@
 README.md
 LICENSE
+CLAUDE.md
 {{ if ne .profile "work" -}}
 .config/git/config_txone
 .config/git/config_txone_pub
