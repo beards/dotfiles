@@ -63,6 +63,7 @@ export LC_ALL=en_US.UTF-8
 # path
 pathprepend /usr/local/sbin /usr/local/bin
 pathprepend $HOME/bin
+pathprepend $HOME/.bun/bin
 
 # autoenv
 if [ -f ~/.autoenv/activate.sh ]; then
