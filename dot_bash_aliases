@@ -35,6 +35,7 @@ alias dr='docker run -it --rm'
 alias cz='chezmoi'
 
 alias claude='claude --allow-dangerously-skip-permissions'
+alias ca='claude'
 
 alias cdc='cd $HOME/_code/'
 alias cdgit='cd $HOME/github'
