@@ -12,5 +12,5 @@ CLAUDE.md
 {{ if .minimal -}}
 install-packages.sh
 install-vim-plugins.sh
-.vim/bundle/vundle
+.vim/autoload/plug.vim
 {{- end }}

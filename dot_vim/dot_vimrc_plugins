@@ -1,36 +1,60 @@
 "
-" vimrc, common plugins
+" vimrc, common plugins (managed by vim-plug)
 "
 
-" using vundle for management
-"
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
-Plugin 'gmarik/vundle.git'
+call plug#begin('~/.vim/plugged')
 
 " easy motion
 "
-Plugin 'Lokaltog/vim-easymotion.git'
+Plug 'easymotion/vim-easymotion'
 
 " SearchComplete
-"
-Plugin 'SearchComplete'
+" (mirrored from vim.org via vim-scripts)
+Plug 'vim-scripts/SearchComplete'
 
 " MultipleSearch
-"
+" (mirrored from vim.org via vim-scripts)
 " (default mapping: <leader>* to highlight current word
 "  commands: :Search , :SearchReset , :SearchReinit)
-Plugin 'MultipleSearch'
+Plug 'vim-scripts/MultipleSearch'
 
 " ctrlp
 "
 " search for files
-Plugin 'kien/ctrlp.vim'
+Plug 'ctrlpvim/ctrlp.vim'
 
 " Nerd Tree
 "
-Plugin 'scrooloose/nerdtree'
-Plugin 'jistr/vim-nerdtree-tabs'
+Plug 'preservim/nerdtree'
+Plug 'jistr/vim-nerdtree-tabs'
+
+" ack
+"
+" (require ack-grep: http://betterthangrep.com/
+"  use 'sudo apt-get install ack-grep' to install)
+Plug 'mileszs/ack.vim'
+
+" vim-indent-guides
+"
+" (default shortcur: <leader>ig
+Plug 'nathanaelkane/vim-indent-guides'
+
+" vim-gitgutter
+"
+Plug 'airblade/vim-gitgutter'
+
+" git-blame
+"
+Plug 'zivyangll/git-blame.vim'
+
+call plug#end()
+
+
+"
+" plugin settings
+"
+
+" Nerd Tree
 nnoremap <silent> <F10> :NERDTreeMirrorToggle<CR>
 inoremap <silent> <F10> <c-o>:NERDTreeMirrorToggle<CR>
 let NERDTreeShowHidden=1
@@ -40,32 +64,20 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTree
 nnoremap <leader>f :NERDTreeFind<CR>
 
 " ack
-"
-" (require ack-grep: http://betterthangrep.com/
-"  use 'sudo apt-get install ack-grep' to install)
-Plugin 'mileszs/ack.vim'
 nnoremap <silent> <leader>F :Ack!<CR>
 
 " vim-indent-guides
-"
-" (default shortcur: <leader>ig
-Plugin 'nathanaelkane/vim-indent-guides'
 let g:indent_guides_enable_on_vim_startup = 0
 "let g:indent_guides_guide_size = 1
 let g:indent_guides_start_level = 2
 let g:indent_guides_auto_colors = 1
 
-
 " vim-gitgutter
-"
-Plugin 'airblade/vim-gitgutter'
 let g:gitgutter_enabled = 0
 nnoremap <silent> <F8> :GitGutterToggle<CR>
 nnoremap <silent> <leader>h :GitGutterNextHunk<CR>
 nnoremap <silent> <leader>H :GitGutterPrevHunk<CR>
 
 " git-blame
-"
-Plugin 'zivyangll/git-blame.vim'
 nnoremap <Leader>b :<C-u>call gitblame#echo()<CR>
 
