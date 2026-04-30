@@ -5,6 +5,8 @@
 
 set -u
 
+command -v jq >/dev/null || { echo "[statusline error: jq missing — please install jq]"; exit 0; }
+
 # Walk up to 8 process ancestors looking for one that owns a real TTY,
 # then read its size. Mirrors ccstatusline's probeTerminalWidth().
 detect_terminal_width() {
