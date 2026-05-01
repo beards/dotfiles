@@ -11,19 +11,6 @@
       "Bash(git rebase *)"
     ]
   },
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Edit|Write|Bash|NotebookEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/check-permission.sh"
-          }
-        ]
-      }
-    ]
-  },
   "enabledPlugins": {
     "codex@openai-codex": true,
     "superpowers@claude-plugins-official": true,
