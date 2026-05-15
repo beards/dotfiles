@@ -20,6 +20,14 @@ When the user asks how to do something, or asks for a solution to a problem, **d
 - Keep each option brief — depth lives behind the link, not in the response.
 - **When `WebFetch` returns empty or fails** on a page (SPA, JS-rendered, behind login, complex client routing), don't degrade to `WebSearch` guessing — invoke the `agent-browser` skill instead. `agent-browser open <url> && agent-browser snapshot -i` runs a real Chrome via CDP and reaches DOM that `WebFetch` can't. Falls back gracefully on machines where `agent-browser` isn't installed.
 
+## Extracting content from webpages or documents
+
+When the user asks you to fetch, read, or research a URL or document, return the **fully expanded** content the first time — don't stop at the rendered surface:
+
+- **Truncated link previews are display-only.** X/Twitter, Bluesky, Mastodon, Discord, Slack render long URLs as `domain.com/path…` ellipsis text. The real URL lives in the `href`; pull it, don't paste the visible preview.
+- **Resolve shortlinks** (`t.co`, `bit.ly`, `lnkd.in`) to their final destinations: `curl -sI -L -o /dev/null -w '%{url_effective}\n' <url>`.
+- **If a fetched summary feels lossy** (you'd have to ask the user "want me to grab more?"), don't ask — re-fetch the raw body, or fall back to `agent-browser` for JS-rendered pages, and report the full version.
+
 ## Working on code
 
 Four principles to prevent common LLM coding mistakes — prefer caution over speed, but apply judgment on trivial tasks:
