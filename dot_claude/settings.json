@@ -11,6 +11,10 @@
       "Bash(git rebase *)"
     ]
   },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh"
+  },
   "enabledPlugins": {
     "codex@openai-codex": true,
     "superpowers@claude-plugins-official": true,
@@ -22,9 +26,20 @@
     "claude-md-management@claude-plugins-official": true,
     "commit-commands@claude-plugins-official": true,
     "serena@claude-plugins-official": false,
-    "code-simplifier@claude-plugins-official": true
+    "code-simplifier@claude-plugins-official": true,
+    "claude-obsidian@claude-obsidian-marketplace": true
+  },
+  "extraKnownMarketplaces": {
+    "claude-obsidian-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "AgriciDaniel/claude-obsidian"
+      }
+    }
   },
   "language": "traditional chinese",
+  "alwaysThinkingEnabled": true,
+  "effortLevel": "xhigh",
   "skipDangerousModePermissionPrompt": true,
   "skipAutoPermissionPrompt": true,
   "autoMode": {
@@ -35,11 +50,5 @@
       "Do not run commands like `git rebase` or `git reset --hard` to break the source control history unless user explicitly ask to do that",
       "Never do `git push --force`"
     ]
-  },
-  "effortLevel": "xhigh",
-  "alwaysThinkingEnabled": true,
-  "statusLine": {
-    "type": "command",
-    "command": "~/.claude/statusline.sh"
   }
 }

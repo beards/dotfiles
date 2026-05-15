@@ -18,4 +18,8 @@ When the user asks how to do something, or asks for a solution to a problem, **d
 - **For specific tools, languages, libraries, SDKs, or APIs:** consult the official documentation (via `context7` MCP, official docs sites, or `--help`/`man`). Never guess flag names, API signatures, or config keys.
 - **Present options ranked by viability**, not just one answer. For each option give: a short description, main pros/cons, and **a source link** (official docs, RFC, repo, well-known blog post). The user should be able to dig deeper or ask follow-ups from the citation alone.
 - Keep each option brief — depth lives behind the link, not in the response.
+- **When `WebFetch` returns empty or fails** on a page (SPA, JS-rendered, behind login, complex client routing), don't degrade to `WebSearch` guessing — invoke the `agent-browser` skill instead. `agent-browser open <url> && agent-browser snapshot -i` runs a real Chrome via CDP and reaches DOM that `WebFetch` can't. Falls back gracefully on machines where `agent-browser` isn't installed.
 
+# graphify
+- **graphify** (`~/.claude/skills/graphify/SKILL.md`) - any input to knowledge graph. Trigger: `/graphify`
+When the user types `/graphify`, invoke the Skill tool with `skill: "graphify"` before doing anything else.

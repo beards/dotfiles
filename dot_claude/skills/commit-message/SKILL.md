@@ -1,5 +1,5 @@
 ---
-name: commit
+name: commit-message
 description: Commit staged changes with a conventional commits message based on the actual diff.
 disable-model-invocation: false
 allowed-tools: Bash Read Grep
