@@ -175,7 +175,36 @@ else
     width_marker=' [w=?]'
 fi
 
-# ─── line 1: (id) dir (branch) ───
+# ─── line 1: [name (plan)] (id) dir (branch) ───
+# Account name + plan (or "API") sit at the very front, cached by the
+# SessionStart hook (account-info.sh). Everything fits on one line when it can;
+# when it doesn't, the folder drops to its own next line; if the folder alone is
+# still too long, it is left-truncated with a leading ellipsis (the old way).
+acct_name=""
+acct_plan=""
+# Cache lives in the active config dir (respects CLAUDE_CONFIG_DIR), so this one
+# shared script shows the right account per instance.
+acct_dir="${CLAUDE_CONFIG_DIR:-${HOME:-}/.claude}"
+acct_file="$acct_dir/.session-account.json"
+if [ -n "$acct_dir" ] && [ -f "$acct_file" ]; then
+    IFS=$'\t' read -r acct_name acct_plan < <(jq -r '[.name // "", .plan // ""] | @tsv' "$acct_file" 2>/dev/null)
+fi
+
+acct_plain=""
+acct_colored=""
+if [ "$acct_plan" = "API" ]; then
+    acct_plain="API"
+    acct_colored="${BBLUE}API${RESET}"
+elif [ -n "$acct_plan" ]; then
+    if [ -n "$acct_name" ]; then
+        acct_plain="${acct_name} (${acct_plan})"
+        acct_colored="${BWHITE}${acct_name}${RESET} ${BBLUE}(${acct_plan})${RESET}"
+    else
+        acct_plain="(${acct_plan})"
+        acct_colored="${BBLUE}(${acct_plan})${RESET}"
+    fi
+fi
+
 prefix=""
 [ -n "$session_id_short" ] && prefix+="($session_id_short)"
 
@@ -184,6 +213,19 @@ suffix=""
 if [ -n "$branch" ]; then
     suffix_plain=" ($branch)"
     suffix=" ${MAGENTA}($branch)${RESET}"
+fi
+
+# Lead = account segment + session-id prefix (everything left of the folder).
+lead_plain="$prefix"
+lead_colored="$prefix"
+if [ -n "$acct_plain" ]; then
+    if [ -n "$prefix" ]; then
+        lead_plain="${acct_plain} ${prefix}"
+        lead_colored="${acct_colored} ${prefix}"
+    else
+        lead_plain="$acct_plain"
+        lead_colored="$acct_colored"
+    fi
 fi
 
 display_dir=$current_dir
@@ -195,21 +237,33 @@ if [ -n "${HOME:-}" ] && [ -n "$current_dir" ]; then
     fi
 fi
 
-display_dir_visible=$display_dir
-if [ -n "$term_width" ] && [ -n "$display_dir" ]; then
-    budget=$(( term_width - reserved - ${#prefix} - ${#suffix_plain} - ${#SEP} ))
-    if [ "${#display_dir}" -gt "$budget" ]; then
-        keep=$(( budget - ${#ELLIPSIS} ))
-        if [ "$keep" -gt 0 ]; then
-            display_dir_visible="${ELLIPSIS}${display_dir: -keep}"
-        else
-            display_dir_visible=""
+if [ -z "$term_width" ]; then
+    # Width unknown: print everything in full and flag it.
+    dir_part=""
+    [ -n "$display_dir" ] && dir_part="${SEP}${YELLOW}${display_dir}${RESET}"
+    line1="${lead_colored}${dir_part}${suffix}${width_marker}"
+elif [ -z "$display_dir" ]; then
+    line1="${lead_colored}${suffix}"
+else
+    avail=$(( term_width - reserved ))
+    one_line_len=$(( ${#lead_plain} + ${#SEP} + ${#display_dir} + ${#suffix_plain} ))
+    if [ "$one_line_len" -le "$avail" ]; then
+        line1="${lead_colored}${SEP}${YELLOW}${display_dir}${RESET}${suffix}"
+    else
+        # Folder drops to its own line.
+        line1="${lead_colored}${suffix}"
+        dir_visible=$display_dir
+        if [ "${#display_dir}" -gt "$avail" ]; then
+            keep=$(( avail - ${#ELLIPSIS} ))
+            if [ "$keep" -gt 0 ]; then
+                dir_visible="${ELLIPSIS}${display_dir: -keep}"
+            else
+                dir_visible=""
+            fi
         fi
+        [ -n "$dir_visible" ] && line1+=$'\n'"${YELLOW}${dir_visible}${RESET}"
     fi
 fi
-
-dir_segment=""
-[ -n "$display_dir_visible" ] && dir_segment="${SEP}${YELLOW}${display_dir_visible}${RESET}"
 
 # ─── line 2: model (effort) | thinking: On/Off | agent: name ───
 [ "$thinking_enabled" = "true" ] && thinking_state="On" || thinking_state="Off"
@@ -389,6 +443,6 @@ else
     line3="${l3_p1_c}${GRAY_PIPE}${l3_p2_c}${GRAY_PIPE}${l3_p3_c}${GRAY_PIPE}${l3_p4_c}${GRAY_PIPE}${l3_p5_c}"
 fi
 
-printf '%s%s%s%s\n' "$prefix" "$dir_segment" "$suffix" "$width_marker"
+printf '%s\n'       "$line1"
 printf '%s\n'       "$line2"
 printf '%s\n'       "$line3"

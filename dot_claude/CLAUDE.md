@@ -20,6 +20,18 @@ When the user asks how to do something, or asks for a solution to a problem, **d
 - Keep each option brief — depth lives behind the link, not in the response.
 - **When `WebFetch` returns empty or fails** on a page (SPA, JS-rendered, behind login, complex client routing), don't degrade to `WebSearch` guessing — invoke the `agent-browser` skill instead. `agent-browser open <url> && agent-browser snapshot -i` runs a real Chrome via CDP and reaches DOM that `WebFetch` can't. Falls back gracefully on machines where `agent-browser` isn't installed.
 
-# graphify
-- **graphify** (`~/.claude/skills/graphify/SKILL.md`) - any input to knowledge graph. Trigger: `/graphify`
-When the user types `/graphify`, invoke the Skill tool with `skill: "graphify"` before doing anything else.
+## Working on code
+
+Four principles to prevent common LLM coding mistakes — prefer caution over speed, but apply judgment on trivial tasks:
+
+- **Think before coding.** State your assumptions before writing code; if a request has multiple valid readings, list them instead of silently picking one. Push back on needless complexity, and stop to ask when something is genuinely unclear rather than guessing.
+- **Simplicity first.** Write the minimum code that solves the stated problem — nothing speculative. No abstractions for single-use code, no unrequested config/flexibility, no error handling for cases that can't occur. If 200 lines could be 50, cut it. Self-check: would an experienced engineer call this needlessly complex?
+- **Surgical changes.** Touch only what the request needs. Don't "improve" or refactor working code, comments, or formatting around your change; match the existing style even if you'd write it differently. Flag unrelated dead code rather than deleting it; only remove what your own change orphaned. Every changed line should map to the request.
+- **Goal-driven execution.** Turn vague requests into verifiable criteria ("fix the bug" → "reproduce with a failing test, then make it pass") before implementing. For complex tasks, lay out a numbered plan with a verification step per phase, then loop until the criteria are met.
+
+
+## claude-obsidian skills
+
+Before invoking any `claude-obsidian` skill (`/save`, `/wiki`, `/wiki-ingest`, `/wiki-query`, `/wiki-lint`, `/autoresearch`, `/canvas`, `/wiki-fold`), read `~/.claude/claude-obsidian.md` for vault path resolution and fallback rules. Do NOT use `@claude-obsidian.md` import syntax — that defeats the purpose by inlining it back into context.
+
+@RTK.md
