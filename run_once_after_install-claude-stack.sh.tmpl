@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+#
+# Claude Code stack, part 2. Runs AFTER chezmoi applies files, so the headroom
+# launchd plist is already in place. Installs the headroom proxy (needs `uv`
+# from run_once_before-install-packages) and loads its launchd agent.
+# Idempotent — safe to re-run.
+
+set -euo pipefail
+
+{{ if eq .chezmoi.os "darwin" -}}
+
+export PATH="/opt/homebrew/bin:$HOME/.local/bin:$PATH"
+
+# headroom compression proxy (PyPI name: headroom-ai). Pinned to Python 3.13 —
+# the system Python is too new for its native wheels. Exposes ~/.local/bin/headroom.
+if [ ! -x "$HOME/.local/bin/headroom" ]; then
+    uv tool install --python 3.13 "headroom-ai[all]"
+fi
+
+# Load the proxy's launchd agent (RunAtLoad + KeepAlive → starts now and at login).
+# `bootstrap` errors if the agent is already loaded, which is fine — ignore it.
+plist="$HOME/Library/LaunchAgents/com.simon.headroom-proxy.plist"
+if [ -f "$plist" ]; then
+    launchctl bootstrap "gui/$(id -u)" "$plist" 2>/dev/null || true
+fi
+
+{{ end -}}

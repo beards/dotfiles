@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.simon.headroom-proxy</string>
+
+  <!-- Headroom context-compression proxy, shared by both Claude Code accounts.
+       Personal CC reaches it via the `cc` shell wrapper (~/.bash_aliases), which
+       exports ANTHROPIC_BASE_URL=http://127.0.0.1:8787 only when this proxy is up;
+       the txone corporate CC via env.ANTHROPIC_BASE_URL in
+       ~/txone/.claude-txone/settings.json. Client OAuth creds are
+       forwarded upstream by the proxy; it needs no API key of its own.
+       --no-telemetry / --no-subscription-tracking: conservative for the
+       corporate (txone) account. --code-aware enables AST-based code
+       compression; safe as of 0.26.0 — the tree-sitter ThreadPoolExecutor
+       panic (Issue #562) was fixed by PR #564 (thread-local parsers).
+       --log-messages surfaces full request/response content on the live
+       feed + /dashboard. Deliberately NO --log-file: content lives only in
+       the in-memory deque (maxlen 10k, cleared on restart) — nothing
+       sensitive is persisted to disk. -->
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>{{ .chezmoi.homeDir }}/.local/bin/headroom</string>
+    <string>proxy</string>
+    <string>--port</string>
+    <string>8787</string>
+    <string>--no-telemetry</string>
+    <string>--no-subscription-tracking</string>
+    <string>--code-aware</string>
+    <string>--log-messages</string>
+  </array>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>{{ .chezmoi.homeDir }}/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    <key>HOME</key>
+    <string>{{ .chezmoi.homeDir }}</string>
+    <key>USER</key>
+    <string>{{ .chezmoi.username }}</string>
+    <key>LOGNAME</key>
+    <string>{{ .chezmoi.username }}</string>
+  </dict>
+
+  <key>WorkingDirectory</key>
+  <string>{{ .chezmoi.homeDir }}</string>
+
+  <!-- Start at load / login and keep it alive across crashes. -->
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+
+  <key>StandardOutPath</key>
+  <string>{{ .chezmoi.homeDir }}/Library/Logs/headroom-proxy.out.log</string>
+  <key>StandardErrorPath</key>
+  <string>{{ .chezmoi.homeDir }}/Library/Logs/headroom-proxy.err.log</string>
+</dict>
+</plist>

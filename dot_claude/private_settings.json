@@ -75,5 +75,6 @@
       "Do not run commands like `git rebase` or `git reset --hard` to break the source control history unless user explicitly ask to do that",
       "Never do `git push --force`"
     ]
-  }
+  },
+  "skipWorkflowUsageWarning": true
 }

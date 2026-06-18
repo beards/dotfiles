@@ -16,6 +16,16 @@ brew install autoenv
 brew install macvim
 brew install oven-sh/bun/bun
 
+# Claude Code stack — dependencies of the synced ~/.claude config:
+#   jq         statusline.sh + account-info.sh
+#   rtk        PreToolUse hook (`rtk hook claude`)
+#   uv         installs/runs the headroom proxy (see run_once_after-install-claude-stack)
+#   node       MCP servers (context7, etc.)
+#   gh         GitHub ops referenced in CLAUDE.md
+#   claude-code  the CLI itself
+brew install jq uv node gh rtk
+brew install --cask claude-code
+
 brew install --cask karabiner-elements
 
 # configure diff-so-fancy for git
