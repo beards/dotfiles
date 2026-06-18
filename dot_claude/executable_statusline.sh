@@ -368,14 +368,16 @@ seven_d_resets=$(jq -r '.rate_limits.seven_day.resets_at // empty'              
 duration_ms=$(jq -r    '.cost.total_duration_ms // 0'                                    <<<"$input")
 cost_usd=$(jq -r       '.cost.total_cost_usd // 0'                                       <<<"$input")
 
-now_epoch=$(date +%s)
-five_h_cd='??:??:??'
+# Show the local time each window resets at, rather than a countdown
+# (countdowns were hard to read — 7d ran to 100+ hours). 5h stays within a day
+# so HH:mm suffices; 7d spans up to a week so it carries MM/DD too.
+five_h_at='??:??'
 if epoch=$(iso_to_epoch "$five_h_resets"); then
-    five_h_cd=$(sec_to_hms $(( epoch - now_epoch )))
+    five_h_at=$(date -r "$epoch" '+%H:%M')
 fi
-seven_d_cd='??:??:??'
+seven_d_at='??/?? ??:??'
 if epoch=$(iso_to_epoch "$seven_d_resets"); then
-    seven_d_cd=$(sec_to_hms $(( epoch - now_epoch )))
+    seven_d_at=$(date -r "$epoch" '+%m/%d %H:%M')
 fi
 duration_hms=$(ms_to_hms "$duration_ms")
 
@@ -392,8 +394,8 @@ C_7D=$(pick_threshold_color "$seven_d_pct")
 # Plain parts (for width math).
 l3_p1="Ctx: ${ctx_pct_round}%"
 l3_p2="I/O: ${input_tokens}/${output_tokens} (Cached: ${cache_create}/${cache_read})"
-l3_p3a="5h: ${five_h_round}% (-${five_h_cd})"
-l3_p3b="7d: ${seven_d_round}% (-${seven_d_cd})"
+l3_p3a="5h: ${five_h_round}% (→${five_h_at})"
+l3_p3b="7d: ${seven_d_round}% (→${seven_d_at})"
 l3_p3="$l3_p3a / $l3_p3b"
 l3_p4=$duration_hms
 l3_p5="\$${cost_round}"
@@ -401,8 +403,8 @@ l3_p5="\$${cost_round}"
 # Colored parts (for output).
 l3_p1_c="${WHITE}Ctx:${RESET} ${C_CTX}${ctx_pct_round}%${RESET}"
 l3_p2_c="${WHITE}I/O:${RESET} ${WHITE}${input_tokens}/${output_tokens}${RESET} (${WHITE}Cached:${RESET} ${WHITE}${cache_create}/${cache_read}${RESET})"
-l3_p3a_c="${WHITE}5h:${RESET} ${C_5H}${five_h_round}%${RESET} (${WHITE}-${five_h_cd}${RESET})"
-l3_p3b_c="${WHITE}7d:${RESET} ${C_7D}${seven_d_round}%${RESET} (${WHITE}-${seven_d_cd}${RESET})"
+l3_p3a_c="${WHITE}5h:${RESET} ${C_5H}${five_h_round}%${RESET} (${WHITE}→${five_h_at}${RESET})"
+l3_p3b_c="${WHITE}7d:${RESET} ${C_7D}${seven_d_round}%${RESET} (${WHITE}→${seven_d_at}${RESET})"
 l3_p3_c="${l3_p3a_c}${GRAY_SLASH}${l3_p3b_c}"
 l3_p4_c="${WHITE}${duration_hms}${RESET}"
 l3_p5_c="${WHITE}\$${cost_round}${RESET}"
