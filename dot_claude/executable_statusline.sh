@@ -365,6 +365,36 @@ five_h_pct=$(jq -r     '.rate_limits.five_hour.used_percentage // 0'            
 five_h_resets=$(jq -r  '.rate_limits.five_hour.resets_at // empty'                       <<<"$input")
 seven_d_pct=$(jq -r    '.rate_limits.seven_day.used_percentage // 0'                    <<<"$input")
 seven_d_resets=$(jq -r '.rate_limits.seven_day.resets_at // empty'                       <<<"$input")
+
+# Rate-limit reset times only arrive over stdin after the first API round-trip,
+# so a freshly-started session would otherwise render '??'. Persist them (with
+# their percentages) whenever present, and on a cold start fall back to the
+# cached values as long as the cached reset time is still in the future. Each
+# window is judged independently; an elapsed cached time is dropped (-> '??').
+rl_cache="$acct_dir/.rate-limits.json"
+if [ -n "$five_h_resets" ] && [ -n "$seven_d_resets" ]; then
+    jq -n --arg fp "$five_h_pct" --arg fr "$five_h_resets" \
+          --arg sp "$seven_d_pct" --arg sr "$seven_d_resets" \
+          '{five_h_pct:$fp, five_h_resets:$fr, seven_d_pct:$sp, seven_d_resets:$sr}' \
+          >"$rl_cache" 2>/dev/null || true
+elif [ -f "$rl_cache" ]; then
+    now_epoch=$(date +%s)
+    if [ -z "$five_h_resets" ]; then
+        cached_fr=$(jq -r '.five_h_resets // empty' "$rl_cache" 2>/dev/null)
+        if cached_e=$(iso_to_epoch "$cached_fr") && [ "$cached_e" -gt "$now_epoch" ] 2>/dev/null; then
+            five_h_resets=$cached_fr
+            five_h_pct=$(jq -r '.five_h_pct // 0' "$rl_cache" 2>/dev/null)
+        fi
+    fi
+    if [ -z "$seven_d_resets" ]; then
+        cached_sr=$(jq -r '.seven_d_resets // empty' "$rl_cache" 2>/dev/null)
+        if cached_e=$(iso_to_epoch "$cached_sr") && [ "$cached_e" -gt "$now_epoch" ] 2>/dev/null; then
+            seven_d_resets=$cached_sr
+            seven_d_pct=$(jq -r '.seven_d_pct // 0' "$rl_cache" 2>/dev/null)
+        fi
+    fi
+fi
+
 duration_ms=$(jq -r    '.cost.total_duration_ms // 0'                                    <<<"$input")
 cost_usd=$(jq -r       '.cost.total_cost_usd // 0'                                       <<<"$input")
 
