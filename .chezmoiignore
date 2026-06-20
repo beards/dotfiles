@@ -1,6 +1,7 @@
 README.md
 LICENSE
 CLAUDE.md
+.claude/settings.machine.json
 {{ if ne .profile "work" -}}
 .config/git/config_txone
 .config/git/config_txone_pub

@@ -1,0 +1,22 @@
+{{- /*
+  settings.json is templated so a single machine can merge in plugins /
+  marketplaces that must NOT be synced to other machines (local-directory
+  marketplaces, host-specific pluginConfigs, etc.).
+
+  - Shared, synced base: .chezmoitemplates/claude-settings-base.json
+  - Machine-local additions: ~/.claude/settings.machine.json — absent from the
+    chezmoi source, so it never reaches another machine. Same JSON schema as
+    settings.json; deep-merged over the base, machine values win on conflict.
+
+  Machines without the machine file render the base verbatim (no reformat).
+  On a machine that HAS it, the merge round-trips through fromJson/toPrettyJson,
+  so the rendered settings.json comes out alphabetised + 4-space (cosmetic).
+
+  To add a machine-local plugin, see SETUP.md "Machine-local plugins".
+*/ -}}
+{{- $machineFile := joinPath .chezmoi.homeDir ".claude" "settings.machine.json" -}}
+{{- if stat $machineFile -}}
+{{ mustMergeOverwrite (includeTemplate "claude-settings-base.json" . | fromJson) (include $machineFile | fromJson) | toPrettyJson }}
+{{- else -}}
+{{ includeTemplate "claude-settings-base.json" . }}
+{{- end -}}

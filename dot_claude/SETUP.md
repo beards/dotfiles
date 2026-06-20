@@ -91,6 +91,49 @@ claude plugin list                             # verify
 `openai-codex` marketplace isn't registered and the plugin isn't installed. Either
 register that marketplace or remove `codex@openai-codex` from `enabledPlugins`.
 
+### Machine-local plugins (this machine only, never synced)
+
+Some plugins only make sense on one host — a `directory`-source marketplace
+pointing at a local repo, a `pluginConfigs` block with a host-specific `ssh_host`,
+etc. These must **not** land in the synced `settings.json`, yet they still have to
+end up in the rendered `~/.claude/settings.json`, because plugin enablement is read
+**only** from there. (Verified: a user-level `~/.claude/settings.local.json` is
+*ignored* for `enabledPlugins` — setting a plugin `true`/`false` there has no
+effect, so that file is not an option for machine-local plugins.)
+
+The split that makes this work:
+
+- **Shared base** (synced): `.chezmoitemplates/claude-settings-base.json`
+- **This machine's extras** (never synced): `~/.claude/settings.machine.json` —
+  absent from the chezmoi source and listed in `.chezmoiignore`. The
+  `dot_claude/private_settings.json.tmpl` template deep-merges it over the base on
+  `chezmoi apply`. Machines without the file render the base verbatim.
+
+`settings.machine.json` uses the normal `settings.json` schema; include only the
+keys this machine adds, e.g.:
+
+```json
+{
+  "enabledPlugins": { "<name>@<marketplace>": true },
+  "extraKnownMarketplaces": {
+    "<marketplace>": { "source": { "source": "directory", "path": "/abs/path" } }
+  },
+  "pluginConfigs": { "<name>@<marketplace>": { "options": { "k": "v" } } }
+}
+```
+
+To add one (deep-merge so existing entries survive):
+
+```bash
+f=~/.claude/settings.machine.json
+[ -f "$f" ] || echo '{}' > "$f"
+echo '{ "enabledPlugins": { "<name>@<marketplace>": true } }' \
+  | jq -s '.[0] * .[1]' "$f" - > "$f.tmp" && mv "$f.tmp" "$f"
+chezmoi diff  ~/.claude/settings.json   # confirm it appears, nothing shared dropped
+chezmoi apply ~/.claude/settings.json
+# then restart Claude Code — it auto-installs the enabled plugin from its marketplace
+```
+
 ## Notes / caveats
 
 - **`ANTHROPIC_API_KEY`** is set in `~/.rc.local` (not chezmoi-managed — keep it that
