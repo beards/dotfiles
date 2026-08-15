@@ -8,7 +8,7 @@ Configured in `~/.claude/settings.json`:
 
 - **Auto mode is the default** (`permissions.defaultMode: "auto"`). The user expects Claude to proceed autonomously on reversible work and only stop for destructive or shared-system actions.
 - **Destructive git is denied at the harness level.** `git push --force*`, `git push -f*`, and `git filter-branch*` are blocked by `permissions.deny`; `git reset --hard*` and `git rebase*` are soft-denied. Do not attempt to work around these — if an operation genuinely requires them, ask the user to run it.
-- **Language:** Converse with the user in Traditional Chinese (正體中文). Everything *written to a file* is in English — not only code, identifiers, and comments, but also all documentation: specs, design docs, READMEs, and any markdown. Commit messages and PR descriptions are English too. The Chinese rule applies ONLY to chat replies, never to persisted artifacts.
+- **Language:** Converse with the user in Traditional Chinese (正體中文). Use **English** for anything code-facing or shipped into the repo — code and identifiers, code comments, commit messages, PR descriptions, and technical docs (READMEs, API docs, design docs). Use **Chinese** for chat replies and for planning/discussion artifacts we work through together, e.g. Superpowers-generated specs and plans — even when written to a file. The split is by purpose, not file-vs-chat: a spec/plan exists for us to discuss → Chinese; a doc that ships with the code → English.
 
 ## Answering "how do I X?" / solution requests
 
@@ -36,6 +36,13 @@ Four principles to prevent common LLM coding mistakes — prefer caution over sp
 - **Simplicity first.** Write the minimum code that solves the stated problem — nothing speculative. No abstractions for single-use code, no unrequested config/flexibility, no error handling for cases that can't occur. If 200 lines could be 50, cut it. Self-check: would an experienced engineer call this needlessly complex?
 - **Surgical changes.** Touch only what the request needs. Don't "improve" or refactor working code, comments, or formatting around your change; match the existing style even if you'd write it differently. Flag unrelated dead code rather than deleting it; only remove what your own change orphaned. Every changed line should map to the request.
 - **Goal-driven execution.** Turn vague requests into verifiable criteria ("fix the bug" → "reproduce with a failing test, then make it pass") before implementing. For complex tasks, lay out a numbered plan with a verification step per phase, then loop until the criteria are met.
+
+## Persist deliverables; keep context lean
+
+Any durable work product — plans, specs, subagent reports, review findings, intermediate results — lands on disk as it is produced (a scratchpad file, the SDD ledger/report files, or the repo), never only in the conversation. Then an interruption, compaction, or session-limit cutoff cannot destroy finished work, and the live context stays small.
+
+- **Authoritative copy on disk, pointer in chat.** Keep the full artifact in a file; keep only a short pointer or verdict in the conversation.
+- **Subagents write files, return verdicts.** When dispatching subagents — reviewers included, not just implementers — instruct them to write their full output to a named file and return only a brief status/verdict. Never let a long artifact ride back inline; it then re-rides in every later turn's context.
 
 
 ## claude-obsidian skills
