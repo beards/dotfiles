@@ -73,6 +73,9 @@
   "effortLevel": "xhigh",
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark",
+  "autoCompactEnabled": true,
+  "remoteControlAtStartup": false,
+  "tui": "fullscreen",
   "skipAutoPermissionPrompt": true,
   "autoMode": {
     "allow": [
