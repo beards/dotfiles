@@ -9,6 +9,8 @@ CLAUDE.md
 {{ if ne .chezmoi.os "darwin" -}}
 .config/karabiner
 .config/karabiner/**
+Library
+Library/**
 {{- end }}
 {{ if .minimal -}}
 install-packages.sh
