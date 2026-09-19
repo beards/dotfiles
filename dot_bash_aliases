@@ -38,30 +38,45 @@ alias cm='chezmoi'
 # ANTHROPIC_BASE_URL is controlled HERE (not in settings.json, whose env block
 # would outrank the shell). Three states: proxy up → use it; installed but down →
 # start via launchd and wait; not installed → fall back to the direct API.
-cc() {
-  local base="http://127.0.0.1:8787" label="com.simon.headroom-proxy"
-  if command -v headroom >/dev/null 2>&1; then
-    if ! curl -fs -m1 "$base/livez" >/dev/null 2>&1; then
-      echo "⏳ headroom proxy down — starting via launchd…" >&2
-      launchctl kickstart -k "gui/$(id -u)/$label" 2>/dev/null \
-        || launchctl bootstrap "gui/$(id -u)" "$HOME/Library/LaunchAgents/$label.plist" 2>/dev/null
-      local i=0
-      until curl -fs -m1 "$base/livez" >/dev/null 2>&1; do
-        sleep 0.3; i=$((i + 1))
-        if [ "$i" -ge 33 ]; then   # ~10s cap → fall back instead of hanging
-          echo "⚠ proxy didn't come up in 10s — using direct API" >&2
-          unset ANTHROPIC_BASE_URL
-          command claude --allow-dangerously-skip-permissions "$@"; return
-        fi
-      done
-      echo "✓ proxy ready" >&2
-    fi
-    export ANTHROPIC_BASE_URL="$base"
-  else
-    unset ANTHROPIC_BASE_URL
-    echo "⚠ headroom not installed — using direct API (run ~/.claude/doctor.sh)" >&2
-  fi
-  command claude --allow-dangerously-skip-permissions "$@"
+#cc() {
+#  local base="http://127.0.0.1:8787" label="com.simon.headroom-proxy"
+#  if command -v headroom >/dev/null 2>&1; then
+#    if ! curl -fs -m1 "$base/livez" >/dev/null 2>&1; then
+#      echo "⏳ headroom proxy down — starting via launchd…" >&2
+#      launchctl kickstart -k "gui/$(id -u)/$label" 2>/dev/null \
+#        || launchctl bootstrap "gui/$(id -u)" "$HOME/Library/LaunchAgents/$label.plist" 2>/dev/null
+#      local i=0
+#      until curl -fs -m1 "$base/livez" >/dev/null 2>&1; do
+#        sleep 0.3; i=$((i + 1))
+#        if [ "$i" -ge 33 ]; then   # ~10s cap → fall back instead of hanging
+#          echo "⚠ proxy didn't come up in 10s — using direct API" >&2
+#          unset ANTHROPIC_BASE_URL
+#          command claude --allow-dangerously-skip-permissions "$@"; return
+#        fi
+#      done
+#      echo "✓ proxy ready" >&2
+#    fi
+#    export ANTHROPIC_BASE_URL="$base"
+#  else
+#    unset ANTHROPIC_BASE_URL
+#    echo "⚠ headroom not installed — using direct API (run ~/.claude/doctor.sh)" >&2
+#  fi
+#  command claude --allow-dangerously-skip-permissions "$@"
+#}
+alias cc='claude --allow-dangerously-skip-permissions'
+
+# `ccd` runs Claude Code as the Discord bot bridge: discord plugin loaded as a
+# channel, Remote Control session named "Canal". Host needs: bun (plugin's MCP
+# server), the discord plugin (synced via settings.json), a claude.ai login,
+# and ~/.claude/channels/discord/ state (.env bot token + access.json — copied
+# manually, never through chezmoi). Run on ONE machine at a time: two gateway
+# connections on the same bot token would double-handle every message.
+ccd() {
+  DISCORD_BOT_ACTIVE=1 claude \
+      --dangerously-load-development-channels plugin:discord@claude-plugins-official \
+      --remote-control Canal \
+      --allow-dangerously-skip-permissions \
+      "$@"
 }
 
 alias cdc='cd $HOME/_code/'
@@ -72,3 +87,6 @@ streamlink() {
 }
 
 alias c='copilot --yolo --experimental'
+
+# Random 16-char alphanumeric password
+alias genpw='LC_ALL=C tr -dc "A-Za-z0-9" </dev/urandom | head -c 16; echo'
