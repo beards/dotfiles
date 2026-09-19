@@ -106,8 +106,10 @@ The split that makes this work:
 - **Shared base** (synced): `.chezmoitemplates/claude-settings-base.json`
 - **This machine's extras** (never synced): `~/.claude/settings.machine.json` —
   absent from the chezmoi source and listed in `.chezmoiignore`. The
-  `dot_claude/private_settings.json.tmpl` template deep-merges it over the base on
-  `chezmoi apply`. Machines without the file render the base verbatim.
+  `dot_claude/modify_private_settings.json.tmpl` modify script deep-merges it over
+  the base on `chezmoi apply` (requires `jq`). Keys managed by neither the base
+  nor the machine file — state Claude Code writes itself, e.g. `model`,
+  `modelSettings` — pass through untouched, so they never show as drift.
 
 `settings.machine.json` uses the normal `settings.json` schema; include only the
 keys this machine adds, e.g.:

@@ -1,0 +1,36 @@
+{{- /*
+  modify_ script for ~/.claude/settings.json — manages PART of the file.
+
+  chezmoi pipes the current ~/.claude/settings.json into this script's stdin
+  and reads the target state from its stdout. Managed keys (the shared base
+  plus this machine's settings.machine.json overlay) are enforced; every
+  other key — machine-local state Claude Code writes itself (model,
+  modelSettings, agentPushNotifEnabled, ...) — passes through untouched, so
+  it never shows up as drift in `chezmoi diff` and never gets deleted by
+  `chezmoi apply`.
+
+  - Shared, synced base: .chezmoitemplates/claude-settings-base.json,
+    embedded below verbatim (no template-side JSON round-trip: that would
+    alphabetise keys and cause cosmetic churn).
+  - Machine-local additions: ~/.claude/settings.machine.json — absent from
+    the chezmoi source, deep-merged over the base by jq at run time (machine
+    wins). See SETUP.md "Machine-local plugins".
+
+  jq's `*` merge (right side wins per key, recursively; arrays replaced
+  wholesale) preserves the current file's key order, so when managed values
+  already match, output is byte-identical to input — no reformat churn
+  against Claude Code's own rewrites of the file. Empty stdin (fresh
+  machine, file absent) yields the managed keys as the whole file.
+*/ -}}
+#!/bin/sh
+base="$(cat <<'CHEZMOI_BASE'
+{{ includeTemplate "claude-settings-base.json" . }}
+CHEZMOI_BASE
+)"
+mf="$HOME/.claude/settings.machine.json"
+if [ -f "$mf" ]; then
+  managed="$(printf '%s' "$base" | jq --slurpfile m "$mf" '. * $m[0]')"
+else
+  managed="$base"
+fi
+exec jq -n --argjson managed "$managed" '(input? // {}) * $managed'
