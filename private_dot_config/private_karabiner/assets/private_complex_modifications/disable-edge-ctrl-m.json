@@ -1,0 +1,24 @@
+{
+    "title": "Disable Ctrl+M in Microsoft Edge",
+    "rules": [
+        {
+            "description": "Swallow Ctrl+M (mute tab) in Edge",
+            "manipulators": [
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "m",
+                        "modifiers": { "mandatory": ["control"] }
+                    },
+                    "to": [{ "key_code": "vk_none" }],
+                    "conditions": [
+                        {
+                            "type": "frontmost_application_if",
+                            "bundle_identifiers": ["^com\\.microsoft\\.edgemac"]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
