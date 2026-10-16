@@ -10,7 +10,7 @@ Personal dotfiles managed with [chezmoi](https://www.chezmoi.io/). Targets macOS
 | Editor | `dot_vim/` (self-contained vimrc + Vundle-managed plugins), `symlink_dot_vimrc` |
 | Terminal | `dot_tmux.conf.tmpl` (auto-adapts to tmux version), `dot_screenrc` |
 | Git | `private_dot_config/git/` (`config.tmpl` + per-profile includes, `ignore`) |
-| macOS | `private_dot_config/karabiner/` (only applied on darwin) |
+| macOS | `private_dot_config/karabiner/`, `private_dot_config/iterm2/` (iTerm2 settings snapshot; both only applied on darwin) |
 | Claude Code | `dot_claude/` (settings + skills) |
 | Scripts | `scripts/` (helpers on `$PATH` via `$HOME/scripts`) |
 | Bootstrap | `run_once_before_install-packages.sh.tmpl`, `run_onchange_after_install-vim-plugins.sh.tmpl` |
@@ -19,7 +19,7 @@ Key chezmoi config:
 
 - `.chezmoi.toml.tmpl` — prompts for `profile` (personal/work) and `minimal` (bool) on first init.
 - `.chezmoiexternal.toml` — pulls [Vundle](https://github.com/gmarik/vundle) into `~/.vim/bundle/vundle`.
-- `.chezmoiignore` — hides work-only git configs when `profile != work`, Karabiner on non-macOS, and all installers when `minimal` is true.
+- `.chezmoiignore` — hides work-only git configs when `profile != work`, Karabiner and iTerm2 on non-macOS, and all installers when `minimal` is true.
 
 ## Apply to a new machine
 
@@ -60,6 +60,21 @@ On a full (non-minimal) run this will:
 - Antigen bundles (oh-my-zsh, autosuggestions, theme `steeef`, etc.) will auto-install on first zsh launch.
 - Machine-local overrides go in `~/.rc.local` — both `.bashrc` and `.zshrc` source it if present.
 - On macOS, open Karabiner-Elements once to grant input-monitoring permission; the config under `~/.config/karabiner/` will already be in place.
+- On macOS, restore iTerm2 settings (quit iTerm2 first), then relaunch it:
+
+  ```sh
+  ~/scripts/iterm2-settings.sh import
+  ```
+
+## iTerm2 settings
+
+`scripts/iterm2-settings.sh` snapshots the `com.googlecode.iterm2` defaults domain as an XML plist (per-machine `NoSync*` keys dropped). The default path is the copy in the chezmoi source dir, `private_dot_config/iterm2/com.googlecode.iterm2.plist`; pass a path to use another file.
+
+```sh
+iterm2-settings.sh export            # live settings -> chezmoi source; then commit
+iterm2-settings.sh import            # chezmoi source -> live settings (refuses while iTerm2 runs; -f to override)
+iterm2-settings.sh export ~/x.plist  # one-off snapshot elsewhere
+```
 
 ### Minimal mode
 
