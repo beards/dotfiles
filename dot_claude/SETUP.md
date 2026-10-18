@@ -14,31 +14,13 @@ Run `~/.claude/doctor.sh` at any time to check what's missing.
 | `claude` | `brew install --cask claude-code` | the CLI itself |
 | `jq` | `brew install jq` (or system `/usr/bin/jq`) | `statusline.sh`, `account-info.sh` (degrade quietly) |
 | `rtk` | `brew install rtk` (homebrew/core) | `PreToolUse` hook `rtk hook claude` fails on every Bash call |
-| `uv` | `brew install uv` | can't install the headroom proxy |
-| `headroom` | `uv tool install --python 3.13 "headroom-ai[all]"` | **the `cc` wrapper falls back to the direct API** (no compression) |
+| `uv` | `brew install uv` | `uv tool`-installed helpers (e.g. graphify) |
 | `node` / `npx` | `brew install node` | MCP servers (context7, …) |
 | `gh` | `brew install gh` | GitHub operations referenced in `CLAUDE.md` |
 | `chezmoi` | `brew install chezmoi` (or the install one-liner) | can't sync this config |
 
-All of these are installed by the chezmoi bootstrap scripts
-(`run_once_before_install-packages.sh.tmpl` and `run_once_after_install-claude-stack.sh.tmpl`).
-
-## The headroom proxy and `ANTHROPIC_BASE_URL`
-
-API traffic is routed through a local [headroom](https://www.rtk-ai.app) compression
-proxy on `http://127.0.0.1:8787`, started by a launchd agent
-(`~/Library/LaunchAgents/com.simon.headroom-proxy.plist`, RunAtLoad + KeepAlive).
-
-`ANTHROPIC_BASE_URL` is **not** set in `settings.json` (a settings `env` value would
-outrank the shell and couldn't be made conditional). Instead the `cc` shell function
-(`~/.bash_aliases`) controls it at launch:
-
-1. **proxy up** → export the base URL, launch.
-2. **headroom installed but proxy down** → start it via launchd, wait until `/livez`
-   is healthy (≤10s, else fall back), launch.
-3. **headroom not installed** → unset the base URL → use the direct API, launch with a warning.
-
-So `cc` always works; plain `claude` (not via `cc`) just uses the direct API.
+All of these are installed by the chezmoi bootstrap script
+(`run_once_before_install-packages.sh.tmpl`).
 
 ## Bootstrap ordering
 
@@ -49,29 +31,29 @@ So `cc` always works; plain `claude` (not via `cc`) just uses the direct API.
 brew install chezmoi
 # 2. pull + apply the dotfiles — run_once scripts install everything above
 chezmoi init --apply <your-dotfiles-repo>
-# 3. the headroom proxy is now installed and loaded; open Claude Code
+# 3. open Claude Code
 cc
 # 4. optional sanity check
 ~/.claude/doctor.sh
 ```
 
-No chicken-and-egg: the proxy is up before Claude Code starts.
+No chicken-and-egg: every dependency is in place before Claude Code starts.
 
 ### Order A — Claude Code first
 
 ```bash
-# 1. install + open Claude Code (works: no synced settings yet, no proxy dependency)
+# 1. install + open Claude Code (works: no synced settings yet)
 brew install --cask claude-code && claude
 # 2. from inside Claude Code, pull and apply the dotfiles
 #    (install chezmoi first if needed)
 chezmoi init --apply <your-dotfiles-repo>
-# 3. the environment just changed (proxy, hooks, wrapper). Heal + verify:
+# 3. the environment just changed (hooks, wrapper). Heal + verify:
 ~/.claude/doctor.sh
 # 4. RESTART Claude Code so it picks up the new config, and relaunch via `cc`
 ```
 
 After applying the dotfiles, the running session is using the pre-sync config —
-restart it (and use `cc`) so the proxy + hooks take effect.
+restart it (and use `cc`) so the hooks take effect.
 
 ## Plugins
 
@@ -141,8 +123,5 @@ chezmoi apply ~/.claude/settings.json
 - **`ANTHROPIC_API_KEY`** is set in `~/.rc.local` (not chezmoi-managed — keep it that
   way). If exported it can override the personal account's OAuth subscription; `doctor.sh`
   warns about it.
-- **GUI/Dock launches** of Claude Code bypass the `cc` wrapper → direct API, no proxy.
-  This setup assumes you launch from the terminal via `cc`.
 - The **txone** corporate account (`~/txone/.claude-txone`) is a separate config dir with
-  its own `ANTHROPIC_BASE_URL` and a weekday warm-up launchd job; it's out of scope here
-  but shares the same proxy.
+  a weekday warm-up launchd job; it's out of scope here.
