@@ -8,8 +8,8 @@
 # under CLAUDE_CONFIG_DIR it moves into that directory.
 #
 # Output: <config_dir>/.session-account.json
-#   subscription -> {"name":"Simon","plan":"Team"}
-#   no oauth     -> {"name":"","plan":"API"}
+#   subscription -> {"name":"Simon","plan":"Team","org":"txOne 2nd PDG"}
+#   no oauth     -> {"name":"","plan":"API","org":""}
 set -u
 
 command -v jq >/dev/null 2>&1 || exit 0
@@ -23,8 +23,9 @@ else
 fi
 out="$config_dir/.session-account.json"
 
-name=$(jq -r '.oauthAccount.displayName // empty'      "$claude_json" 2>/dev/null)
-org=$(jq -r  '.oauthAccount.organizationType // empty' "$claude_json" 2>/dev/null)
+name=$(jq -r     '.oauthAccount.displayName // empty'      "$claude_json" 2>/dev/null)
+org=$(jq -r      '.oauthAccount.organizationType // empty' "$claude_json" 2>/dev/null)
+org_name=$(jq -r '.oauthAccount.organizationName // empty' "$claude_json" 2>/dev/null)
 
 if [ -n "$org" ]; then
     plan="${org#claude_}"   # claude_max -> max, claude_team -> team
@@ -32,6 +33,12 @@ if [ -n "$org" ]; then
 else
     name=""
     plan="API"
+    org_name=""
 fi
 
-jq -n --arg name "$name" --arg plan "$plan" '{name:$name, plan:$plan}' >"$out"
+# Personal accounts get an auto-named "<email>'s Organization" — no information
+# there (the plan already identifies them), so only keep real org names.
+case "$org_name" in *"'s Organization") org_name="" ;; esac
+
+jq -n --arg name "$name" --arg plan "$plan" --arg org "$org_name" \
+      '{name:$name, plan:$plan, org:$org}' >"$out"

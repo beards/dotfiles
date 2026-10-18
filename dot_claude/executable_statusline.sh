@@ -182,13 +182,20 @@ fi
 # still too long, it is left-truncated with a leading ellipsis (the old way).
 acct_name=""
 acct_plan=""
+acct_org=""
 # Cache lives in the active config dir (respects CLAUDE_CONFIG_DIR), so this one
 # shared script shows the right account per instance.
 acct_dir="${CLAUDE_CONFIG_DIR:-${HOME:-}/.claude}"
 acct_file="$acct_dir/.session-account.json"
 if [ -n "$acct_dir" ] && [ -f "$acct_file" ]; then
-    IFS=$'\t' read -r acct_name acct_plan < <(jq -r '[.name // "", .plan // ""] | @tsv' "$acct_file" 2>/dev/null)
+    IFS=$'\t' read -r acct_name acct_plan acct_org < <(jq -r '[.name // "", .plan // "", .org // ""] | @tsv' "$acct_file" 2>/dev/null)
 fi
+
+# Plan and organization share one parenthetical: "(Team · txOne 2nd PDG)". The
+# org is what tells two same-plan work accounts apart; it is empty for personal
+# ones (see account-info.sh).
+plan_group=$acct_plan
+[ -n "$acct_org" ] && plan_group="${acct_plan} · ${acct_org}"
 
 acct_plain=""
 acct_colored=""
@@ -197,11 +204,11 @@ if [ "$acct_plan" = "API" ]; then
     acct_colored="${BBLUE}API${RESET}"
 elif [ -n "$acct_plan" ]; then
     if [ -n "$acct_name" ]; then
-        acct_plain="${acct_name} (${acct_plan})"
-        acct_colored="${BWHITE}${acct_name}${RESET} ${BBLUE}(${acct_plan})${RESET}"
+        acct_plain="${acct_name} (${plan_group})"
+        acct_colored="${BWHITE}${acct_name}${RESET} ${BBLUE}(${plan_group})${RESET}"
     else
-        acct_plain="(${acct_plan})"
-        acct_colored="${BBLUE}(${acct_plan})${RESET}"
+        acct_plain="(${plan_group})"
+        acct_colored="${BBLUE}(${plan_group})${RESET}"
     fi
 fi
 
