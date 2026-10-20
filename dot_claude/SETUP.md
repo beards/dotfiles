@@ -11,7 +11,7 @@ Run `~/.claude/doctor.sh` at any time to check what's missing.
 
 | Tool | Install | What breaks without it |
 |------|---------|------------------------|
-| `claude` | `brew install --cask claude-code` | the CLI itself |
+| `claude` | `brew install --cask claude-code@latest` | the CLI itself |
 | `jq` | `brew install jq` (or system `/usr/bin/jq`) | `statusline.sh`, `account-info.sh` (degrade quietly) |
 | `rtk` | `brew install rtk` (homebrew/core) | `PreToolUse` hook `rtk hook claude` fails on every Bash call |
 | `uv` | `brew install uv` | `uv tool`-installed helpers (e.g. graphify) |
@@ -43,7 +43,7 @@ No chicken-and-egg: every dependency is in place before Claude Code starts.
 
 ```bash
 # 1. install + open Claude Code (works: no synced settings yet)
-brew install --cask claude-code && claude
+brew install --cask claude-code@latest && claude
 # 2. from inside Claude Code, pull and apply the dotfiles
 #    (install chezmoi first if needed)
 chezmoi init --apply <your-dotfiles-repo>

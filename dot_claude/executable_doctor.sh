@@ -16,7 +16,7 @@ for t in jq uv node npx gh chezmoi rtk claude; do
     pass "$t"
   else
     case "$t" in
-      claude)          fail "claude missing — brew install --cask claude-code" ;;
+      claude)          fail "claude missing — brew install --cask claude-code@latest" ;;
       rtk|jq|uv|node|gh) fail "$t missing — brew install $t" ;;
       *)               fail "$t missing" ;;
     esac
