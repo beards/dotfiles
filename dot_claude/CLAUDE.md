@@ -52,3 +52,6 @@ Any durable work product — plans, specs, subagent reports, review findings, in
 Before invoking any `claude-obsidian` skill (`/save`, `/wiki`, `/wiki-ingest`, `/wiki-query`, `/wiki-lint`, `/autoresearch`, `/canvas`, `/wiki-fold`), read `~/.claude/claude-obsidian.md` for vault path resolution and fallback rules. Do NOT use `@claude-obsidian.md` import syntax — that defeats the purpose by inlining it back into context.
 
 @RTK.md
+# graphify
+- **graphify** (`~/.claude/skills/graphify/SKILL.md`) - any input to knowledge graph. Trigger: `/graphify`
+When the user types `/graphify`, invoke the Skill tool with `skill: "graphify"` before doing anything else.

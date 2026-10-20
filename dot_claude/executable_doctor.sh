@@ -11,13 +11,16 @@ warned() { printf '  \033[33m!\033[0m %s\n' "$1"; warn=$((warn + 1)); }
 fail()   { printf '  \033[31m✗\033[0m %s\n' "$1"; bad=$((bad + 1)); }
 
 echo "== CLIs =="
-for t in jq uv node npx gh chezmoi rtk claude; do
+for t in jq uv node npx gh chezmoi rtk claude agentsview graphify agent-browser; do
   if command -v "$t" >/dev/null 2>&1; then
     pass "$t"
   else
     case "$t" in
       claude)          fail "claude missing — brew install --cask claude-code@latest" ;;
       rtk|jq|uv|node|gh) fail "$t missing — brew install $t" ;;
+      agentsview)      fail "agentsview missing — brew install agentsview" ;;
+      graphify)        fail "graphify missing — uv tool install graphifyy" ;;
+      agent-browser)   fail "agent-browser missing — npm i -g agent-browser" ;;
       *)               fail "$t missing" ;;
     esac
   fi

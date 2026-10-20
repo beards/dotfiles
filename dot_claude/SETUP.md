@@ -18,9 +18,15 @@ Run `~/.claude/doctor.sh` at any time to check what's missing.
 | `node` / `npx` | `brew install node` | MCP servers (context7, …) |
 | `gh` | `brew install gh` | GitHub operations referenced in `CLAUDE.md` |
 | `chezmoi` | `brew install chezmoi` (or the install one-liner) | can't sync this config |
+| `agentsview` | `brew install agentsview` | the `agentsview-finding-history` skill (`agentsview skills install`) |
+| `graphify` | `uv tool install graphifyy` | the `graphify` skill (`graphify install --platform claude`) |
+| `agent-browser` | `npm i -g agent-browser` | the `agent-browser` skill is only a stub pointing at the CLI |
 
-All of these are installed by the chezmoi bootstrap script
-(`run_once_before_install-packages.sh.tmpl`).
+All of these are installed by the chezmoi bootstrap scripts:
+`run_once_before_install-packages.sh.tmpl` for the base tools and
+`run_onchange_after_install-claude-skills.sh.tmpl` for the skill-generating
+tools (it also regenerates their skills). Plugins such as `answer-me-with-html`
+are declared in `settings.json` and fetched by Claude Code itself.
 
 ## Bootstrap ordering
 

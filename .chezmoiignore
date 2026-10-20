@@ -17,5 +17,6 @@ Library/**
 {{ if .minimal -}}
 install-packages.sh
 install-vim-plugins.sh
+install-claude-skills.sh
 .vim/autoload/plug.vim
 {{- end }}

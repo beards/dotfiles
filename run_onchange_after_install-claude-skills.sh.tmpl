@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+#
+# Install the tools that generate their own skill under ~/.claude/skills and
+# (re)generate those skills. run_onchange: re-runs whenever this file changes,
+# so adding a tool here installs it on the next `chezmoi apply` everywhere.
+# Every step is idempotent.
+#
+# Skill                       Tool / install
+#   agentsview-finding-history  agentsview  (brew)      -> agentsview skills install
+#   graphify                    graphifyy   (uv tool)   -> graphify install --platform claude
+#   agent-browser               agent-browser (npm -g); the skill stub itself
+#                               comes from .chezmoiexternal.toml
+#   answer-me-with-html         Claude Code plugin, declared in settings.json
+set -euo pipefail
+
+{{ if eq .chezmoi.os "darwin" -}}
+brew install agentsview
+{{- end }}
+uv tool install graphifyy
+npm install -g agent-browser
+agent-browser install   # pinned Chrome build; no-op once that build is present
+
+agentsview skills install
+graphify install --platform claude

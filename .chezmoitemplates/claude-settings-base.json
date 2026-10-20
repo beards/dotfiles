@@ -58,13 +58,20 @@
     "commit-commands@claude-plugins-official": true,
     "serena@claude-plugins-official": false,
     "code-simplifier@claude-plugins-official": true,
-    "claude-obsidian@claude-obsidian-marketplace": true
+    "claude-obsidian@claude-obsidian-marketplace": true,
+    "answer-me-with-html@answer-me-with-html": true
   },
   "extraKnownMarketplaces": {
     "claude-obsidian-marketplace": {
       "source": {
         "source": "github",
         "repo": "AgriciDaniel/claude-obsidian"
+      }
+    },
+    "answer-me-with-html": {
+      "source": {
+        "source": "github",
+        "repo": "QingYunA/answer-me-with-html"
       }
     }
   },
