@@ -22,3 +22,7 @@ agent-browser install   # pinned Chrome build; no-op once that build is present
 
 agentsview skills install
 graphify install --platform claude
+# graphify install appends a registration block to ~/.claude/CLAUDE.md. The
+# skill is discovered from ~/.claude/skills anyway, so drop the block again
+# (it is always appended at the end of the file).
+sed -i.bak '/^# graphify$/,$d' ~/.claude/CLAUDE.md && rm -f ~/.claude/CLAUDE.md.bak
