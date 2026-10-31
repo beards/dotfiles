@@ -59,7 +59,8 @@
     "serena@claude-plugins-official": false,
     "code-simplifier@claude-plugins-official": true,
     "claude-obsidian@claude-obsidian-marketplace": true,
-    "answer-me-with-html@answer-me-with-html": true
+    "answer-me-with-html@answer-me-with-html": true,
+    "mattpocock-skills@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "claude-obsidian-marketplace": {
